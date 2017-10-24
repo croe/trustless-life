@@ -1,0 +1,137 @@
+//Layout
+
+#root {
+  height: 100%;
+}
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  &.gene1 { &:after{ background: $gen1;} }
+  &.gene2 { &:after{ background: $gen2;} }
+  &.gene3 { &:after{ background: $gen3;} }
+  &:after {
+    position: fixed;
+    content: 'TRUSTLESS LIFE';
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1;
+    color: $color-base-white;
+    bottom: -100px;
+    right: -100px;
+    width: 200px;
+    height: 200px;
+    text-align: center;
+    padding: 15px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: $color-base-red;
+    transform-origin: center;
+    transform: rotate(315deg);
+    z-index: 100;
+  }
+  .app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+}
+.container {
+  padding: 70px 0 0;
+  .mission {
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+    h2 {
+      margin: 20px 0 0;
+    }
+    ul {
+      width: 100%;
+      li {
+        position: relative;
+        width: 100%;
+        padding: 10px 15px 10px 45px;
+        margin: 10px 0 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        span {
+          display: inline-block;
+          margin: 0 20px 0 0;
+        }
+        .box_btn {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        button {
+          font-size: 16px;
+          color: #fff;
+          background: #acacac;
+        }
+        &.gene1 {
+          background: rgba(123, 120, 62, 0.7);
+        }
+        &.gene2 {
+          background: rgba(59, 94, 102, 0.7);
+        }
+        &.gene3 {
+          background: rgba(107, 76, 82, 0.7);
+        }
+        &:before {
+          position: absolute;
+          top: 45%;
+          left: 12px;
+          transform: translateY(-50%);
+          width: 20px;
+          height: 20px;
+          content: "\f318";
+          font-family: Ionicons;
+          font-size: 25px;
+          line-height: 1;
+        }
+        &.city1 { &:before{ color: $city1; } }
+        &.city2 { &:before{ color: $city2; } }
+        &.city3 { &:before{ color: $city3; } }
+        &.city4 { &:before{ color: $city4; } }
+        &.city5 { &:before{ color: $city5; } }
+        &.city6 { &:before{ color: $city6; } }
+      }
+    }
+    .complete_list {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      li {
+        width: 40px;
+        height: 40px;
+        border: none;
+        margin: 10px 4px;
+        &:before {
+          width: 35px;
+          height: 35px;
+          font-size: 40px;
+        }
+      }
+    }
+  }
+  .mission_list {
+    li {
+
+    }
+  }
+  .offer_list {
+    li {
+
+    }
+  }
+}

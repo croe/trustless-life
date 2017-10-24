@@ -1,0 +1,65 @@
+//Layout
+header {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 90px;
+  background: $gen1;
+  z-index: 100;
+  &.gene1 { background: $gen1; }
+  &.gene2 { background: $gen2; }
+  &.gene3 { background: $gen3; }
+  &:before {
+    position: absolute;
+    font-family: Ionicons;
+    font-size: 60px;
+    content: "\f2d8";
+    color: #fff;
+    line-height: 1;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+  }
+  ul {
+    padding: 0 0 0 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    li {
+      margin: 0 5px;
+      padding: 4px 10px;
+      box-sizing: border-box;
+      background: $color-base-white;
+      border-radius: 5px;
+      font-size: 40px;
+      display: flex;
+      align-items: center;
+      &:before {
+        position: relative;
+        font-family: Ionicons;
+        margin: 0 15px 0 0;
+        font-size: 60px;
+        content: "\f2d8";
+        color: #000;
+        line-height: 1;
+      }
+      &:nth-child(1){ &:before {content: "\f443";
+        color: $state1;}}
+      &:nth-child(2){ &:before {content: "\f357";
+        color: $state2;}}
+      &:nth-child(3){ &:before {content: "\f369";
+        color: $state3;}}
+      &:nth-child(4){ &:before {content: "\f251";
+        color: $state4;}}
+      &:nth-child(5){ &:before {content: "\f2af";
+        color: $state5;}}
+      &:nth-child(6){
+        background: transparent;
+        &:before {
+          content: "\f20e";
+          color: #fff;}}
+    }
+  }
+}

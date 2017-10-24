@@ -1,0 +1,56 @@
+// Base
+//
+// 各要素のデフォルトのスタイルです。
+//
+// Styleguide base
+
+//Base
+@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,700);
+@import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
+
+html {
+  width: 100%;
+  min-height: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: 'Ubuntu', "Noto Sans JP", "游ゴシック Medium", "游ゴシック体", "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: $color-base-black;
+  font-size: 14px;
+  line-height: 1em;
+  overflow-x: hidden;
+}
+
+ul,li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+
+button {
+  padding: 4px 10px;
+  margin: 10px;
+  box-sizing: border-box;
+  border: 1px solid $gen2;
+  border-radius: 5px;
+  background: none;
+  font-size: 20px;
+  line-height: 1;
+  &.dangerous {
+    background: $color-base-red;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
