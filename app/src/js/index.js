@@ -8,6 +8,7 @@ import store from 'store';
 import _ from 'lodash';
 
 import db_mission from './db_mission.json';
+import db_homes from './db_homes.json';
 
 class Index extends Component {
   constructor(props) {
@@ -15,17 +16,15 @@ class Index extends Component {
     this.state = {
       delay: 100,
       result: 'No result',
-      dispModalIsOpen: false,
-      initModalIsOpen: false,
-      geneModalIsOpen: false,
       mapModalIsOpen: false,
       controlModalIsOpen: false,
       offerModalIsOpen: false,
+      carModalIsOpen: false,
+      homeModalIsOpen: false,
       scanFlg: true,
       nowSelectedItem: {}
     }
 
-    this.playerInitHandleScan = this.playerInitHandleScan.bind(this)
     this.componentHandleScan = this.componentHandleScan.bind(this)
   }
 
@@ -34,6 +33,16 @@ class Index extends Component {
     let json = JSON.parse(data);
     if(data && it.state.scanFlg){
       it.setState({scanFlg: false});
+      // Player register reader
+      if (json.x === 1){
+        it.props.player.id = json.p;
+        it.props._it.setState({player: it.props.player})
+        store.set('player', it.props.player)
+        it.closeInitModal();
+        it.closeCtrlModal();
+        it.setState({scanFlg: true})
+      }
+      // Generation Event reader
       if (json.x === 2) {
         console.log(json)
         // Set generation
@@ -100,6 +109,7 @@ class Index extends Component {
         it.closeCtrlModal();
         it.setState({scanFlg: true})
       }
+      // Map Event reader
       if (json.x === 3){
         console.log(json)
         if (json.s === 1){
@@ -119,25 +129,11 @@ class Index extends Component {
         if (json.s === 3){
           let sel, selcp;
           let arr = store.get('mission')? store.get('mission'): [];
-          if (it.props.gene === 1){
-            sel = Math.floor(Math.random() * db_mission[0].length);
-            selcp = db_mission[0][sel];
+          if (it.props.gene){
+            sel = Math.floor(Math.random() * db_mission[it.props.gene - 1].length);
+            selcp = db_mission[it.props.gene - 1][sel];
             selcp.city = json.c;
             arr.push(selcp);
-            store.set('mission', arr);
-            it.props._it.setState({mlist: arr});
-          } else if (it.props.gene === 2){
-            sel = Math.floor(Math.random() * db_mission[1].length);
-            selcp = db_mission[1][sel];
-            selcp.city = json.c;
-            arr.push(selcp)
-            store.set('mission', arr);
-            it.props._it.setState({mlist: arr});
-          } else if (it.props.gene === 3){
-            sel = Math.floor(Math.random() * db_mission[2].length);
-            selcp = db_mission[2][sel];
-            selcp.city = json.c;
-            arr.push(selcp)
             store.set('mission', arr);
             it.props._it.setState({mlist: arr});
           }
@@ -145,19 +141,6 @@ class Index extends Component {
           it.closeCtrlModal();
           it.setState({scanFlg: true});
         }
-      }
-    }
-  }
-  playerInitHandleScan(data){
-    let it = this;
-    let json = JSON.parse(data);
-    if (data !== null) {
-      if (json.x === 1){
-        it.props.player.id = json.p;
-        it.props._it.setState({player: it.props.player})
-        store.set('player', it.props.player)
-        it.closeInitModal();
-        it.closeCtrlModal();
       }
     }
   }
@@ -279,16 +262,68 @@ class Index extends Component {
     it.closeOfferModal();
   }
 
+  makeHomeRent(){
+    let it = this;
+    let c = {"content": it.props.homelist}
+    it.props.dsOffers.set('j9lua9qa000062p', c,function(err){
+      if(err){
+        console.log('can\'t get user list');
+        return;
+      }
+    })
+  }
+
+  rentHomeHandleClick(e, item, i){
+    let it = this;
+    swal({
+      title: "この家を借りますか？",
+      icon: "info",
+      buttons: true
+    }).then((agree)=>{
+      if (agree){
+        // homeListから削除して、自分のリストに追加する
+        // 全員のhomeListが更新される
+        let pulled = _.pullAt(it.props.homelist, [i]);
+        it.props._it.setState({homelist: it.props.homelist});
+        store.set('home', it.props.homelist);
+        it.makeHomeRent();
+        let arr = it.props.myhomelist;
+        arr.push(item);
+        it.props._it.setState({myhomelist: arr});
+        store.set('myhome', arr);
+      } else {
+        swal('キャンセルしました');
+      }
+    })
+  }
+
   openCtrlModal(){ this.setState({ controlModalIsOpen: true })}
   closeCtrlModal(){ this.setState({ controlModalIsOpen: false })}
-  openInitModal(){ this.setState({ initModalIsOpen: true })}
-  closeInitModal(){ this.setState({ initModalIsOpen: false })}
-  openGeneModal(){ this.setState({ geneModalIsOpen: true })}
-  closeGeneModal(){ this.setState({ geneModalIsOpen: false })}
   openMapModal(){ this.setState({ mapModalIsOpen: true })}
   closeMapModal(){ this.setState({ mapModalIsOpen: false })}
   openOfferModal(){ this.setState({ offerModalIsOpen: true})}
   closeOfferModal(){ this.setState({ offerModalIsOpen: false})}
+  openHomeModal(){
+    let it = this;
+    this.setState({ homeModalIsOpen: true})
+    // 初期値としての借りられる家リストを生成・ブロードキャスト
+    if(store.get('homes')){
+      it.props._it.setState({ homelist: store.get('homes')});
+    } else {
+      let r = [];
+      do {
+        let arr = db_homes[Math.floor(Math.random() * db_homes.length)];
+        r.push(arr);
+        r = _.uniq(r);
+      } while (r.length < 4);
+      let c = {"content": r}
+      store.set('homes', r)
+      it.props.dsHomes.set('j9lua9qa000062p', c,function(err){console.log(err)})
+    }
+  }
+  closeHomeModal(){ this.setState({ homeModalIsOpen: false})}
+  openCarModal(){ this.setState({ carModalIsOpen: true})}
+  closeCarModal(){ this.setState({ carModalIsOpen: false})}
   handleError(err) { console.log(err)}
   resetDataHandleClick() {
     let it = this;
@@ -301,6 +336,7 @@ class Index extends Component {
         let c = { content: [] }
         store.clearAll();
         it.props.dsOffers.set('j8w994qz00002jn', c);
+        it.props.dsHomes.set('j9lua9qa000062p', c);
         it.closeCtrlModal();
       } else {
         swal("キャンセルしました");
@@ -369,6 +405,30 @@ class Index extends Component {
         <li className={cls} key={i}/>
       )
     });
+    let homeList = this.props.homelist.map((item, i)=>{
+      let cls = 'city' + item.city;
+      return (
+        <li className={cls} key={i} onClick={e => this.rentHomeHandleClick(e, item, i)}>
+          <span data-val={item.req[0]}>毎ターン</span>
+          <span data-val={item.req[1]}>信用度</span>
+          <span data-val={item.res[0]}>体力回復</span>
+          <span data-val={item.res[1]}>知力回復</span>
+          <span data-val={item.res[2]}>電力回復</span>
+        </li>
+      )
+    });
+    let myhomeList = this.props.myhomelist.map((item, i)=>{
+      let cls = 'city' + item.city;
+      return (
+        <li className={cls} key={i}>
+          <span data-val={item.req[0]}>毎ターン</span>
+          <span data-val={item.req[1]}>信用度</span>
+          <span data-val={item.res[0]}>体力回復</span>
+          <span data-val={item.res[1]}>知力回復</span>
+          <span data-val={item.res[2]}>電力回復</span>
+        </li>
+      )
+    })
     return (
       <div className="app">
         <header className={'gene'+this.props.gene}>
@@ -403,24 +463,10 @@ class Index extends Component {
               contentLabel="Buttons"
             >
               <button onClick={this.openMapModal.bind(this)}>読み込み</button>
-              <button onClick={this.openInitModal.bind(this)}>プレイヤー登録</button>
+              <button onClick={this.openHomeModal.bind(this)}>家</button>
+              <button onClick={this.openCarModal.bind(this)}>シェアライド</button>
               <button onClick={this.closeCtrlModal.bind(this)}>閉じる</button>
               <button className="dangerous" onClick={this.resetDataHandleClick.bind(this)}>データリセット</button>
-            </Modal>
-            <Modal
-              isOpen={this.state.initModalIsOpen}
-              style={customStyles}
-              contentLabel="Player Init"
-            >
-              <h1>プレイヤーの登録</h1>
-              <QRreader
-                delay={this.state.delay}
-                style={previewStyle}
-                onError={this.handleError}
-                onScan={this.playerInitHandleScan}
-                facingMode={'rear'}
-              />
-              <button onClick={this.closeInitModal.bind(this)}>閉じる</button>
             </Modal>
             <Modal
               isOpen={this.state.mapModalIsOpen}
@@ -452,6 +498,24 @@ class Index extends Component {
               <button onClick={this.makeOfferHandleClick.bind(this)}>お願いする</button>
               <button onClick={this.closeOfferModal.bind(this)}>閉じる</button>
             </Modal>
+            <Modal
+              isOpen={this.state.homeModalIsOpen} style={customStyles} contentLabel="Home"
+            >
+              <div className='homeModal'>
+                <h1>現在借りることのできる家</h1>
+                {/*リストランダム表示で、プレイヤーが貸し出す家も他と同じように表示される。*/}
+                <ul>{homeList}</ul>
+                <h2>借りている家</h2>
+                <ul>{myhomeList}</ul>
+                <button onClick={this.closeHomeModal.bind(this)}>閉じる</button>
+              </div>
+            </Modal>
+            <Modal
+              isOpen={this.state.carModalIsOpen} style={customStyles} contentLabel="Car"
+            >
+              <h1>シェアライドカー</h1>
+              <button onClick={this.closeCarModal.bind(this)}>閉じる</button>
+            </Modal>
           </div>
         </main>
       </div>
@@ -465,7 +529,3 @@ export default Index
 // TODO: →体力・知力・信用度などのパラメータ調整（個別で？）、同タイミングでの処理？
 
 
-// TODO: マップチップ検証・修正
-// TODO: ミッション調整
-// ↑ここまでを10時までに
-// TODO: テストプレイ

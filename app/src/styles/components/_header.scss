@@ -1,6 +1,8 @@
 //Layout
 header {
-  position: fixed;
+  position: absolute;
+  top: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,12 +51,12 @@ header {
         color: $state1;}}
       &:nth-child(2){ &:before {content: "\f357";
         color: $state2;}}
-      &:nth-child(3){ &:before {content: "\f369";
-        color: $state3;}}
+      &:nth-child(3){ &:before {content: "\f3e6";
+        color: $state5;}}
       &:nth-child(4){ &:before {content: "\f251";
         color: $state4;}}
       &:nth-child(5){ &:before {content: "\f2af";
-        color: $state5;}}
+        color: $state3;}}
       &:nth-child(6){
         background: transparent;
         &:before {

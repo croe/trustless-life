@@ -7,6 +7,8 @@ import Index from './index';
 
 const milkcocoa = new MilkCocoa('hotj8ru7jps.mlkcca.com');
 const dsOffers = milkcocoa.dataStore('offers');
+const dsHomes = milkcocoa.dataStore('homes');
+const dsCars = milkcocoa.dataStore('cars');
 
 
 class App extends Component {
@@ -18,6 +20,8 @@ class App extends Component {
       isCompleteInitialize: false,
       mcIns: milkcocoa,
       dsOffers: dsOffers,
+      dsHomes: dsHomes,
+      dsCars: dsCars,
       player: {
         "id": 0,
         "status": {
@@ -28,14 +32,16 @@ class App extends Component {
           "val": 10
         },
         "max": {
-          "str": 0,
-          "int": 0
+          "str": 3,
+          "int": 3
         }
       },
       gene: 1,
       mlist: [],
       oflist: [],
       complist: [],
+      homelist: [],
+      myhomelist: []
     }
   }
 
@@ -65,6 +71,10 @@ class App extends Component {
     if (of !== undefined){
       it.setState({ oflist: of });
     }
+    let hm = store.get('homes');
+    if (hm !== undefined){
+      it.setState({ homelist: hm});
+    }
   }
 
   componentDidMount(){
@@ -80,6 +90,10 @@ class App extends Component {
       it.setState({ oflist: set.value.content })
     })
 
+    dsHomes.on('set', function(set){
+      store.get('homes', set.value.content);
+      it.setState({ homelist: set.value.content })
+    })
 
   }
 
@@ -92,11 +106,15 @@ class App extends Component {
           isHandshake: this.state.isHandshake,
           mcIns: this.state.mcIns,
           dsOffers: this.state.dsOffers,
+          dsHomes: this.state.dsHomes,
+          dsCars: this.state.dsCars,
           player: this.state.player,
           gene: this.state.gene,
           mlist: this.state.mlist,
           oflist: this.state.oflist,
-          complist: this.state.complist
+          complist: this.state.complist,
+          homelist: this.state.homelist,
+          myhomelist: this.state.myhomelist
         })}
       </div>
     )
