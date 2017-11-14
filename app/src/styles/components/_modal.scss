@@ -90,3 +90,110 @@
     margin: 20px 0 10px;
   }
 }
+.tradeModal {
+  select {
+    margin: 10px 0 0;
+    border: 1px solid $city3;
+    border-radius: 3px;
+    padding: 8px 10px;
+  }
+  input{
+    margin: 10px 0 0;
+    border: 1px solid $city3;
+    border-radius: 3px;
+    padding: 8px 10px;
+  }
+}
+
+.carModal {
+  ul {
+    margin: 10px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    li {
+      padding: 10px 20px;
+      width: 50%;
+      color: $color-base-white;
+      font-weight: bold;
+      font-size: 16px;
+      &.city1 {
+        background: $city1;
+      }
+      &.city2 {
+        background: $city2;
+      }
+      &.city3 {
+        background: $city3;
+      }
+      &.city4 {
+        background: $city4;
+      }
+      &.city5 {
+        background: $city5;
+      }
+      &.city6 {
+        background: $city6;
+      }
+      span {
+        &:nth-child(1) {
+          &:after {
+            display: inline-block;
+            content: attr(data-val);
+            padding: 10px;
+            background: yellow;
+            color: #000;
+            border-radius: 50%;
+          }
+        }
+        &:nth-child(2) {
+          &:after {
+            display: inline-block;
+            content: attr(data-val);
+            padding: 10px;
+            background: yellow;
+            color: #000;
+            border-radius: 50%;
+          }
+        }
+        &:nth-child(3) {
+          &:after {
+            display: inline-block;
+            content: attr(data-val);
+            padding: 10px;
+            background: yellow;
+            color: #000;
+            border-radius: 50%;
+          }
+        }
+        &:nth-child(4) {
+          &:after {
+            display: inline-block;
+            content: attr(data-val);
+            padding: 10px;
+            background: yellow;
+            color: #000;
+            border-radius: 50%;
+          }
+        }
+        &:nth-child(5) {
+          &:after {
+            display: inline-block;
+            content: attr(data-val);
+            padding: 10px;
+            background: yellow;
+            color: #000;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+  h1 {
+    margin: 0 0 10px;
+  }
+  h2 {
+    margin: 20px 0 10px;
+  }
+}

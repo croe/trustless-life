@@ -1,173 +1,142 @@
 [
-  [
-    {
-      "d_id": 1,
-      "title": "ミッション１",
-      "gen": 1,
-      "req": [3,0,85],
-      "res": 1,
-      "rate":100,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 2,
-      "title": "ミッション２",
-      "gen": 1,
-      "req": [0,3,85],
-      "res": 1,
-      "rate": 100,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 3,
-      "title": "ミッション３",
-      "gen": 1,
-      "req": [3,1,70],
-      "res": 2,
-      "rate": 90,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 3,
-      "title": "ミッション４",
-      "gen": 1,
-      "req": [2,3,105],
-      "res": 3,
-      "rate": 80,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 3,
-      "title": "ミッション５",
-      "gen": 1,
-      "req": [2,4,110],
-      "res": 4,
-      "rate": 60,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    }
-  ],
-  [
-    {
-      "d_id": 1,
-      "title": "ミッション１",
-      "gen": 2,
-      "req": [3,4,100],
-      "res": 3,
-      "rate": 80,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 2,
-      "title": "ミッション２",
-      "gen": 2,
-      "req": [4,3,100],
-      "res": 3,
-      "rate": 80,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 3,
-      "title": "ミッション３",
-      "gen": 2,
-      "req": [4,4,110],
-      "res": 3,
-      "rate": 70,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 3,
-      "title": "ミッション４",
-      "gen": 2,
-      "req": [5,2,120],
-      "res": 6,
-      "rate": 70,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 3,
-      "title": "ミッション５",
-      "gen": 2,
-      "req": [7,2,130],
-      "res": 5,
-      "rate": 60,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    }
-  ],
-  [
-    {
-      "d_id": 1,
-      "title": "ミッション１",
-      "gen": 3,
-      "req": [6,1,110],
-      "res": 4,
-      "rate": 60,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 2,
-      "title": "ミッション２",
-      "gen": 3,
-      "req": [1,6,120],
-      "res": 6,
-      "rate": 60,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 3,
-      "title": "ミッション３",
-      "gen": 3,
-      "req": [7,3,130],
-      "res": 8,
-      "rate": 60,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 3,
-      "title": "ミッション４",
-      "gen": 3,
-      "req": [3,10,140],
-      "res": 12,
-      "rate": 50,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    },
-    {
-      "d_id": 3,
-      "title": "ミッション５",
-      "gen": 3,
-      "req": [10,5,150],
-      "res": 15,
-      "rate": 40,
-      "of": false,
-      "of_t": [],
-      "of_s": []
-    }
-  ]
+  {
+    "d_id": 1,
+    "title": "CAR-A",
+    "from": 1,
+    "to": 2,
+    "req": 2
+  },
+  {
+    "d_id": 2,
+    "title": "CAR-B",
+    "from": 2,
+    "to": 3,
+    "req": 3
+  },
+  {
+    "d_id": 3,
+    "title": "CAR-C",
+    "from": 3,
+    "to": 4,
+    "req": 4
+  },
+  {
+    "d_id": 4,
+    "title": "CAR-D",
+    "from": 4,
+    "to": 5,
+    "req": 3
+  },
+  {
+    "d_id": 5,
+    "title": "CAR-E",
+    "from": 5,
+    "to": 6,
+    "req": 4
+  },
+  {
+    "d_id": 6,
+    "title": "CAR-F",
+    "from": 6,
+    "to": 5,
+    "req": 2
+  },
+  {
+    "d_id": 7,
+    "title": "CAR-G",
+    "from": 4,
+    "to": 3,
+    "req": 5
+  },
+  {
+    "d_id": 8,
+    "title": "CAR-H",
+    "from": 3,
+    "to": 2,
+    "req": 3
+  },
+  {
+    "d_id": 9,
+    "title": "CAR-I",
+    "from": 2,
+    "to": 1,
+    "req": 6
+  },
+  {
+    "d_id": 10,
+    "title": "CAR-J",
+    "from": 2,
+    "to": 1,
+    "req": 3
+  },
+  {
+    "d_id": 11,
+    "title": "CAR-K",
+    "from": 1,
+    "to": 3,
+    "req": 4
+  },
+  {
+    "d_id": 12,
+    "title": "CAR-L",
+    "from": 2,
+    "to": 4,
+    "req": 4
+  },
+  {
+    "d_id": 13,
+    "title": "CAR-M",
+    "from": 3,
+    "to": 6,
+    "req": 5
+  },
+  {
+    "d_id": 14,
+    "title": "CAR-N",
+    "from": 6,
+    "to": 4,
+    "req": 6
+  },
+  {
+    "d_id": 15,
+    "title": "CAR-O",
+    "from": 5,
+    "to": 2,
+    "req": 2
+  },
+  {
+    "d_id": 16,
+    "title": "CAR-P",
+    "from": 4,
+    "to": 1,
+    "req": 4
+  },
+  {
+    "d_id": 17,
+    "title": "CAR-Q",
+    "from": 2,
+    "to": 5,
+    "req": 5
+  },
+  {
+    "d_id": 18,
+    "title": "CAR-R",
+    "from": 1,
+    "to": 6,
+    "req": 2
+  },
+  {
+    "d_id": 19,
+    "title": "CAR-S",
+    "from": 1,
+    "to": 5,
+    "req": 3
+  },
+  {
+    "d_id": 20,
+    "title": "CAR-T",
+    "from": 2,
+    "to": 1,
+    "req": 4
+  }
 ]

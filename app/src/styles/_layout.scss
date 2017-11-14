@@ -12,6 +12,12 @@
   &.gene1 { &:after{ background: $gen1;} }
   &.gene2 { &:after{ background: $gen2;} }
   &.gene3 { &:after{ background: $gen3;} }
+  &.city1 { &:after{ background: $city1; } }
+  &.city2 { &:after{ background: $city2; } }
+  &.city3 { &:after{ background: $city3; } }
+  &.city4 { &:after{ background: $city4; } }
+  &.city5 { &:after{ background: $city5; } }
+  &.city6 { &:after{ background: $city6; } }
   &:after {
     position: fixed;
     content: 'TRUSTLESS LIFE';
@@ -29,7 +35,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    background: $color-base-red;
+    background: $city1;
     transform-origin: center;
     transform: rotate(315deg);
     z-index: 100;
@@ -123,15 +129,28 @@
         }
       }
     }
-  }
-  .mission_list {
-    li {
-
+    .trade_list {
+      li {
+        color: $color-base-black;
+        padding: 10px 15px;
+        &.self {
+          color: $color-base-white;
+          background: #E4514D;
+        }
+        &:before {
+          display: none;
+        }
+      }
     }
-  }
-  .offer_list {
-    li {
+    .mission_list {
+      li {
 
+      }
+    }
+    .offer_list {
+      li {
+
+      }
     }
   }
 }
