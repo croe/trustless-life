@@ -24,6 +24,7 @@ class Index extends Component {
     let it = this;
     let json = JSON.parse(data);
     if(data && it.state.scanFlg){
+      console.log(json);
       // it.setState({scanFlg: false});
       // it.setState({scanFlg: true});
       }
