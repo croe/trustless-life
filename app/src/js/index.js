@@ -25,8 +25,22 @@ class Index extends Component {
     let json = JSON.parse(data);
     if(data && it.state.scanFlg){
       console.log(json);
-      // it.setState({scanFlg: false});
-      // it.setState({scanFlg: true});
+      it.setState({scanFlg: false});
+        // Initialize Player
+        if (json.x === 1) {
+          it.props.player.id = json.p;
+          it.props._it.setState({ player: it.props.player});
+          store.set('player', it.props.player);
+          it.props._it.setUserStatus();
+          console.log(it.props.player);
+          swal({title: 'Success'}).then((agree)=>{
+            if (agree){
+              it.closeComponentModal();
+              it.closeCtrlModal();
+              it.setState({scanFlg: true});
+            }
+          });
+        }
       }
     }
 
@@ -35,6 +49,22 @@ class Index extends Component {
   openComponentModal(){ this.setState({ componentModalIsOpen: true })}
   closeComponentModal(){ this.setState({ componentModalIsOpen: false })}
   handleError(err) { console.log(err)}
+
+  /**
+   * テスト用
+   */
+
+  changeVal(){
+    let it = this;
+    it.props.player.st.confirmedTrust += 10;
+    it.props._it.setState({player: it.props.player});
+    it.props._it.setUserStatus();
+  }
+  viewPlayers(){
+    let it = this;
+    it.props._it.getUsersStatus();
+    console.log(it.props.players)
+  }
 
   render() {
     const previewStyle = {
@@ -58,6 +88,7 @@ class Index extends Component {
       <div className="app">
         <header onClick={this.openCtrlModal.bind(this)} />
         <main className="container">
+          <h1>{'Player' + (this.props.player.id + 1)}</h1>
           <div>
             <Modal
               isOpen={this.state.controlModalIsOpen}
@@ -66,6 +97,8 @@ class Index extends Component {
             >
               <button onClick={this.openComponentModal.bind(this)}>読み込み</button>
               <button onClick={this.closeCtrlModal.bind(this)}>閉じる</button>
+              <button onClick={this.changeVal.bind(this)}>変化</button>
+              <button onClick={this.viewPlayers.bind(this)}>閲覧</button>
             </Modal>
             <Modal
               isOpen={this.state.componentModalIsOpen}
@@ -89,10 +122,3 @@ class Index extends Component {
 }
 
 export default Index
-
-// TODO: ミッションを特定のプレイヤーにオファーする　→　同じ町にいないとできない制限をつける？ →　今はしない
-// TODO: →体力・知力・信用度などのパラメータ調整（個別で？）、同タイミングでの処理？
-
-// TODO: オファーを双方が可能にならないと実行されない仕様に変更 -> 難しいので後で
-// TODO: 自分の借りている家を貸し出す処理、借りている状態も保持する？ -> 難しいので後で
-// TODO: カーシェアの処理

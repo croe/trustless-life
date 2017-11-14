@@ -16,13 +16,13 @@ class App extends Component {
       isCompleteInitialize: false,
       socketIns: {},
       player: {
-        "id": 0,
-        "status": {
-          "str": 0,
-          "int": 0,
-          "mov": 1,
-          "trs": 100,
-          "val": 10
+        "id": null,
+        "st": {
+          "power": 0,
+          "intelligence": 0,
+          "energy": 0,
+          "confirmedTrust": 100,
+          "unconfirmedTrust": 100
         }
       },
       players: [],
@@ -33,7 +33,14 @@ class App extends Component {
     let it = this;
 
     /**
-     * Initialize Status
+     * Initialize Status from localstorage
+     */
+
+    let _p = (store.get('player') !== undefined)? store.get('player'):it.state.player;
+    it.setState({player: _p});
+
+    /**
+     * Initialize Socket.io Instance
      */
 
     let _io = io('http://localhost:3030/');
@@ -45,8 +52,11 @@ class App extends Component {
         isHandshake: true
       });
 
-      _io.on('getUserData',(msg) => {
-        console.log(msg);
+      _io.on('catchUsersStatus',(msg) => {
+        // getUsersStatusの返却値
+        it.setState({
+          players: msg
+        })
       })
     })
 
@@ -55,18 +65,38 @@ class App extends Component {
   componentDidMount(){
     let it = this;
 
-    /**
-     * Initialize Milkcocoa
-     * Add Events
-     */
-
-
   }
 
+  getUsersStatus(){
+    // 全てのプレイヤーの情報を取得する
+    let it = this;
+    if (it.state.isHandshake){
+      it.state.socketIns.emit('getUsersStatus');
+    }
+  }
+
+  setUserStatus(){
+    // 現在のプレイヤー情報をDBに保存する
+    let it = this;
+    store.set('player', it.state.player);
+    if (it.state.isHandshake){
+      it.state.socketIns.emit('setUserStatus', it.state.player);
+    }
+  }
+
+  setOtherUserStatus(_id, _status){
+    // 他のプレイヤーの情報を更新する
+    let it = this;
+    if (it.state.isHandshake){
+      it.state.socketIns.emit('getUsersStatus');
+    }
+  }
+
+
+
   render() {
-    let cls = 'wrapper '+ 'city' + this.state.lastPoscity;
     return (
-      <div className={cls}>
+      <div>
         {this.props.children && React.cloneElement(this.props.children, {
           _it: this,
           isHandshake: this.state.isHandshake,

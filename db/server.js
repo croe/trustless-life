@@ -13,30 +13,33 @@ server.listen(3030, () => {
 
 // NeDB
 let db = {};
-db.users = new NeDB({
-  filename: 'usersFile'
-});
-
+// プレイしてるプレイヤーの情報を登録する
+db.users = new NeDB({ filename: 'usersFile' });
+// 流通している全てのアセットの状態を登録する
+db.assets = new NeDB({ filename: 'assetsFile' });
 db.users.loadDatabase();
-
-/*
-db.users.insert({name: 'huge'});
-db.users.insert({name: 'fuga'});
-db.users.insert({name: 'hoge'});
-*/
-
-db.users.find({name: 'fuga'}, function (err, docs) {
-  console.log("[FIND]");
-  console.log(docs);
-});
-
+db.assets.loadDatabase();
 // Socket.io
 let io = require('socket.io')(server);
 
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', (socket) => {
   console.log('connected');
-  socket.on('disconnect', function () {
+
+  socket.on('setUserStatus', (stateObj) => {
+    db.users.update({'p.id':stateObj.id}, {$set:{'p': stateObj}}, { upsert: true }, (err) =>{
+      db.users.find({'p.id':stateObj.id}, (err, docs) => {
+        socket.emit('catchUserStatus', docs);
+      })
+    });
+  });
+
+  socket.on('getUsersStatus', (_id) => {
+    db.users.find({}, (err, docs) => {
+      socket.emit('catchUsersStatus', docs);
+    });
+  });
+
+  socket.on('disconnect', () => {
     console.log('disconnected');
   })
-
 });
