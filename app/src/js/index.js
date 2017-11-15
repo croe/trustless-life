@@ -27,22 +27,30 @@ class Index extends Component {
       console.log(json);
       it.setState({scanFlg: false});
         // Initialize Player
-        if (json.x === 1) {
-          it.props.player.id = json.p;
-          it.props._it.setState({ player: it.props.player});
-          store.set('player', it.props.player);
-          it.props._it.setUserStatus();
-          console.log(it.props.player);
-          swal({title: 'Success'}).then((agree)=>{
-            if (agree){
-              it.closeComponentModal();
-              it.closeCtrlModal();
-              it.setState({scanFlg: true});
-            }
-          });
-        }
+      if (json.x === 1) {
+        it.props.player.id = json.p;
+        it.props._it.setState({ player: it.props.player});
+        store.set('player', it.props.player);
+        it.props._it.setUserStatus();
+        console.log(it.props.player);
+        swal({title: 'Success'}).then((agree)=>{
+          if (agree){
+            it.closeComponentModal();
+            it.closeCtrlModal();
+            it.setState({scanFlg: true});
+          }
+        });
       }
+      if (json.x === 3){
+        // Mapに乗った時の判定、Mapタイル自体が消費コスト（赤１）
+        // 違う都市タイルに乗った時の判定、消費コスト（黄１）
+      }
+      if (json.x === 6) {
+        it.props._it.getAllAssets();
+      }
+
     }
+  }
 
   openCtrlModal(){ this.setState({ controlModalIsOpen: true })}
   closeCtrlModal(){ this.setState({ controlModalIsOpen: false })}

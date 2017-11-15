@@ -26,6 +26,7 @@ class App extends Component {
         }
       },
       players: [],
+      assets: []
     }
   }
 
@@ -92,7 +93,12 @@ class App extends Component {
     }
   }
 
-
+  getAllAssets(){
+    let it = this;
+    if(it.state.isHandshake){
+      it.state.socketIns.emit('getAllAssets');
+    }
+  }
 
   render() {
     return (

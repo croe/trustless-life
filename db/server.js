@@ -29,6 +29,10 @@ io.sockets.on('connection', (socket) => {
     db.users.update({'p.id':stateObj.id}, {$set:{'p': stateObj}}, { upsert: true }, (err) =>{
       db.users.find({'p.id':stateObj.id}, (err, docs) => {
         socket.emit('catchUserStatus', docs);
+        db.users.find({}, (err, docs)=>{
+          socket.emit('catchUsersStatus', docs);
+          socket.broadcast('catchUsersStatus');
+        })
       })
     });
   });
@@ -38,6 +42,12 @@ io.sockets.on('connection', (socket) => {
       socket.emit('catchUsersStatus', docs);
     });
   });
+
+  socket.on('getAllAssets', ()=> {
+    db.assets.find({}, (err, docs)=>{
+      socket.emit('catchAllAssets', docs);
+    })
+  })
 
   socket.on('disconnect', () => {
     console.log('disconnected');
