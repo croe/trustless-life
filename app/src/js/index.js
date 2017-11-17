@@ -6,6 +6,7 @@ import Modal from 'react-modal'
 import swal from 'sweetalert'
 import store from 'store';
 import _ from 'lodash';
+import CountUp from 'react-countup';
 
 import db_mission from './db_mission.json';
 import db_homes from './db_homes.json';
@@ -25,7 +26,21 @@ class Index extends Component {
       homeModalIsOpen: false,
       salehomeModalIsOpen: false,
       scanFlg: true,
-      nowSelectedItem: {}
+      nowSelectedItem: {},
+      oldPlayerState: {
+        "id": 0,
+        "status": {
+          "str": 0,
+          "int": 0,
+          "mov": 1,
+          "trs": 100,
+          "val": 10
+        },
+        "max": {
+          "str": 3,
+          "int": 3
+        }
+      }
     }
     this.componentHandleScan = this.componentHandleScan.bind(this)
   }
@@ -50,6 +65,8 @@ class Index extends Component {
         // Set generation
         it.props._it.setState({gene: json.g});
         store.set('gene', it.props.gene);
+        // 現在のプレイヤーの状態を保存
+        it.setState({ oldPlayerState: it.props.player});
         /**
          *  ターン処理
          *  家賃の支払い→支払いがマイナスなら-1につき-5
@@ -150,6 +167,8 @@ class Index extends Component {
       if (json.x === 3){
         console.log(json)
         it.props._it.setState({lastPoscity: json.c});
+        // 現在のプレイヤーの状態を保存
+        it.setState({ oldPlayerState: it.props.player});
         store.set('poscity', json.c);
         if (json.s === 1){
           //ランダムで1~5の回復
@@ -226,6 +245,8 @@ class Index extends Component {
     if (it.props.player.status.str >= item.req[0]
       && it.props.player.status.int >= item.req[1]
       && it.props.player.status.trs >= item.req[2]){
+      // 現在のプレイヤーの状態を保存
+      it.setState({ oldPlayerState: it.props.player});
       // 成否判定 ->
       if (100 - item.rate < Math.floor(Math.random() * 101)){
         // 成功ならコスト払って報酬と信用を獲る
@@ -259,6 +280,8 @@ class Index extends Component {
     if (it.props.player.status.str >= item.req[0]
       && it.props.player.status.int >= item.req[1]
       && it.props.player.status.trs >= item.req[2]){
+      // 現在のプレイヤーの状態を保存
+      it.setState({ oldPlayerState: it.props.player});
       // 成否判定 ->
       console.log(item);
       // 同じ街でないと実行できない・相手から先にオファーをクリアする必要がある
@@ -444,6 +467,8 @@ class Index extends Component {
         buttons: true
       }).then((agree)=>{
         if (agree){
+          // 現在のプレイヤーの状態を保存
+          it.setState({ oldPlayerState: it.props.player});
           // 電力消費
           it.props.player.status.mov -= amountTrade;
           it.props._it.setState({player: it.props.player});
@@ -482,6 +507,8 @@ class Index extends Component {
       buttons: true
     }).then((agree)=>{
       if (agree){
+        // 現在のプレイヤーの状態を保存
+        it.setState({ oldPlayerState: it.props.player});
         // 購入処理
         if (it.props.player.status.val >= item.v){
           // お金を支払う処理
@@ -520,6 +547,8 @@ class Index extends Component {
       buttons: true
     }).then((agree)=>{
       if(agree){
+        // 現在のプレイヤーの状態を保存
+        it.setState({ oldPlayerState: it.props.player});
         // 信用判定・電力判定
         if (it.props.player.status.trs >= 90
           && it.props.player.status.mov - item.req >= 0){
@@ -727,11 +756,11 @@ class Index extends Component {
       <div className="app">
         <header className={'city'+this.props.lastPoscity} onClick={this.openCtrlModal.bind(this)}>
           <ul>
-            <li>{this.props.player.status.str}/{this.props.player.max.str}</li>
-            <li>{this.props.player.status.int}/{this.props.player.max.int}</li>
-            <li>{this.props.player.status.mov}</li>
-            <li>{this.props.player.status.trs}</li>
-            <li>{this.props.player.status.val}</li>
+            <li><CountUp start={0} end={this.props.player.status.str} duration={3}/>/<CountUp start={0} end={this.props.player.max.str} duration={3}/></li>
+            <li><CountUp start={0} end={this.props.player.status.int} duration={3}/>/<CountUp start={0} end={this.props.player.max.int} duration={3}/></li>
+            <li><CountUp start={0} end={this.props.player.status.mov} duration={3}/></li>
+            <li><CountUp start={0} end={this.props.player.status.trs} duration={3}/></li>
+            <li><CountUp start={0} end={this.props.player.status.val} duration={3}/></li>
             <li onClick={this.openCtrlModal.bind(this)}> </li>
           </ul>
         </header>
