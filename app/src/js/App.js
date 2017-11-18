@@ -2,17 +2,12 @@ import React, {Component} from "react";
 import {render} from "react-dom";
 import {browserHistory, Router, Route, IndexRoute} from 'react-router';
 import store from 'store';
+import io from 'socket.io-client';
 import _ from 'lodash';
+import swal from 'sweetalert';
 
 import Index from './index';
-
-const milkcocoa = new MilkCocoa('hotj8ru7jps.mlkcca.com');
-const dsOffers = milkcocoa.dataStore('offers');
-const dsHomes = milkcocoa.dataStore('homes');
-const dsCars = milkcocoa.dataStore('cars');
-const dsTrades = milkcocoa.dataStore('trades');
-const dsMoney = milkcocoa.dataStore('moneys');
-
+import Login from './login';
 
 class App extends Component {
 
@@ -21,14 +16,13 @@ class App extends Component {
     this.state = {
       isHandshake: false,
       isCompleteInitialize: false,
-      mcIns: milkcocoa,
-      dsOffers: dsOffers,
-      dsHomes: dsHomes,
-      dsCars: dsCars,
-      dsTrades: dsTrades,
-      dsMoney: dsMoney,
+      isInitPlayer: false,
+      IO: {},
       player: {
         "id": 0,
+        "name": null,
+        "city": 0,
+        "slam": false,
         "status": {
           "str": 0,
           "int": 0,
@@ -41,7 +35,7 @@ class App extends Component {
           "int": 3
         }
       },
-      gene: 1,
+      plist:[],
       mlist: [],
       oflist: [],
       complist: [],
@@ -58,16 +52,57 @@ class App extends Component {
   componentWillMount() {
     let it = this;
 
+    // let _io = io('http://localhost:3030/');
+    let _io = io(); // for Production
+
+    _io.on('connect', () => {
+      it.setState({
+        IO: _io,
+        isHandshake: true
+      });
+      it.getPlayersList()
+
+      _io.on('catch_player_status', (msg) => {
+        console.log(msg);
+      })
+
+      _io.on('catch_inited_player', (msg) => {
+        console.log(msg[0].p);
+        it.setState({ player: msg[0].p});
+        store.set('player', it.state.player);
+        swal({ title: 'Welcome! ' + msg[0].p.name + ' さま' })
+      })
+
+      _io.on('catch_players_list', (msg) => {
+        console.log(msg);
+        it.setState({ plist: msg});
+      })
+
+      _io.on('catch_offers_list', (msg) => {
+        console.log(msg);
+        it.setState({ oflist: msg});
+        store.set('offer', it.state.oflist);
+      })
+
+      _io.on('catch_trades_list', (msg) => {
+        console.log(msg);
+        it.setState({ tradelist: msg});
+        store.set('trades', it.state.tradelist);
+      })
+
+      _io.on('catch_confirm_tx', (msg) => {
+        console.log(msg);
+        it.setPlayerStatus();
+      })
+
+    })
+
     /**
      * Initialize Status
      */
     let st = store.get('player');
     if (st !== undefined){
       it.setState({ player: st })
-    }
-    let gn = store.get('gene');
-    if (gn !== undefined){
-      it.setState({ gene: gn });
     }
     let ml = store.get('mission');
     if (ml !== undefined){
@@ -107,6 +142,7 @@ class App extends Component {
     }
     // 厳密な処理には必要だけど、こんがらがる？
     let aw = store.get('arwmove');
+
   }
 
   componentDidMount(){
@@ -117,49 +153,58 @@ class App extends Component {
      * Add Events
      */
 
-    // dsMoney.push({'content': []})
-    /**
-     * dsTrades: j9rxxrwt0000835
-     * dsHomes: j9lua9qa000062p
-     * dsOffers: j8w994qz00002jn
-     * dsCars: j9rxxrwu0000hke
-     * dsMoney: j9sh36z20000btf
-     */
 
-    dsOffers.on('set',function(set){
-      console.log(set.value)
-      store.set('offer', set.value.content)
-      it.setState({ oflist: set.value.content })
-    })
+  }
 
-    dsHomes.on('set', function(set){
-      console.log(set.value)
-      store.set('homes', set.value.content);
-      it.setState({ homelist: set.value.content })
-    })
+  setPlayerStatus(){
+    let it = this;
 
-    dsTrades.on('set', function(set){
-      console.log(set.value)
-      store.set('trades', set.value.content);
-      it.setState({ tradelist: set.value.content })
-    })
+    it.setState({ player: it.state.player});
+    store.set('player', it.state.player);
+    it.state.IO.emit('set_player_status', it.state.player);
 
-    // 所持金のリアルタイム反映
-    dsMoney.on('set', function(set){
-      console.log(set.value)
-      set.value.content.map((item, i)=>{
-        if (item.id === it.state.player.id){
-          // プレイヤー情報の更新
-          it.state.player.status.val += parseInt(item.v);
-          it.setState({player: it.state.player});
-          store.set('player', it.state.player);
-          // リストから決済情報の削除
-          let pulled = _.pullAt(set.value.content, [i]);
-          it.state.dsMoney.set('j9sh36z20000btf', {"content":set.value.content});
-        }
-      })
-    })
+  }
 
+  getPlayersList(){
+    let it = this;
+
+    it.state.IO.emit('get_players_list', '');
+  }
+
+  initPlayerData(_name){
+    let it = this;
+
+    // データベースにプレイヤー情報を登録、IDの発行と名前とのひも付けを行う
+    it.state.player.name = _name;
+    it.setState({ player: it.state.player});
+    it.state.IO.emit('init_player_data', it.state.player);
+
+  }
+
+  addOffersList(_item){
+    let it = this;
+
+    it.state.IO.emit('add_offers_list', _item);
+  }
+
+  updateOfferData(_id, _item){
+    let it = this;
+    let msg = [_id, _item];
+
+    it.state.IO.emit('update_offer_data', msg);
+  }
+
+  addTradesList(_item){
+    let it = this;
+
+    it.state.IO.emit('add_trades_list', _item);
+  }
+
+  updateTradeData(_id, _item){
+    let it = this;
+    let msg = [_id, _item];
+
+    it.state.IO.emit('update_trade_data', msg);
   }
 
   render() {
@@ -169,14 +214,8 @@ class App extends Component {
         {this.props.children && React.cloneElement(this.props.children, {
           _it: this,
           isHandshake: this.state.isHandshake,
-          mcIns: this.state.mcIns,
-          dsOffers: this.state.dsOffers,
-          dsHomes: this.state.dsHomes,
-          dsCars: this.state.dsCars,
-          dsTrades: this.state.dsTrades,
-          dsMoney: this.state.dsMoney,
           player: this.state.player,
-          gene: this.state.gene,
+          plist: this.state.plist,
           mlist: this.state.mlist,
           oflist: this.state.oflist,
           complist: this.state.complist,
@@ -185,7 +224,8 @@ class App extends Component {
           myhomelist: this.state.myhomelist,
           carlist: this.state.carlist,
           lastPoscity: this.state.lastPoscity,
-          allowMove: this.state.allowMove
+          allowMove: this.state.allowMove,
+          IO: this.state.IO
         })}
       </div>
     )
@@ -197,8 +237,10 @@ class App extends Component {
 render((
     <Router history={browserHistory}>
       <Route path="/" components={App}>
-        <IndexRoute components={Index}/>
+        <IndexRoute components={Login}/>
         <Route path="/config" component={Index}/>
+        <Route path="/login" component={Index}/>
+        <Route path="/play" component={Index}/>
       </Route>
     </Router>
   ), document.getElementById('root')

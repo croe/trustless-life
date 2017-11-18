@@ -1,0 +1,17 @@
+{
+  "name": "trustless-market",
+  "version": "2.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Akihiro Kato",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0",
+    "mongoose": "^4.11.10",
+    "nedb": "^1.8.0",
+    "socket.io": "^1.7.1"
+  }
+}
