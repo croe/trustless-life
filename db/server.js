@@ -96,10 +96,6 @@ io.sockets.on('connection', (socket) => {
 
   socket.on('update_trade_data', (msg) => {
     db.trades.update({_id: msg[0]}, {$set:{'t': msg[1]}}, (err)=> {
-      db.trades.find({_id: msg[0]}, (err, roc) => {
-        socket.emit('catch_confirm_tx', roc);
-        socket.broadcast.emit('catch_confirm_tx', roc);
-      })
       db.trades.remove({'t.fr': null,'t.to': null}, { multi: true }, (err)=>{
         db.trades.find({}, (err, docs) => {
           socket.emit('catch_trades_list', docs);
@@ -107,6 +103,15 @@ io.sockets.on('connection', (socket) => {
         })
       });
     })
+  })
+
+  socket.on('set_transaction', (msg) => {
+    socket.broadcast.emit('catch_transaction', msg);
+  })
+
+  socket.on('tx_transaction', (msg) => {
+    socket.emit('catch_trust_transaction', msg);
+    socket.broadcast.emit('catch_trust_transaction', msg);
   })
 
 

@@ -44,6 +44,7 @@ class App extends Component {
       myhomelist: [],
       moneylist: [],
       carlist: [],
+      trustlist: [],
       lastPoscity: 0,
       allowMove: 0,
     }
@@ -90,9 +91,20 @@ class App extends Component {
         store.set('trades', it.state.tradelist);
       })
 
-      _io.on('catch_confirm_tx', (msg) => {
+      _io.on('catch_transaction', (msg) => {
         console.log(msg);
-        it.setPlayerStatus();
+        if(msg[0] === it.state.player.id){
+          if(msg[1] === 'val'){
+            it.state.player.status.val += msg[2];
+          }
+          it.setPlayerStatus();
+        }
+      })
+
+      _io.on('catch_trust_transaction', (msg) =>{
+        console.log(msg)
+        it.state.trustlist.unshift(msg);
+        it.setState({trustlist: it.state.trustlist});
       })
 
     })
@@ -207,6 +219,18 @@ class App extends Component {
     it.state.IO.emit('update_trade_data', msg);
   }
 
+  setTransaction(tx){
+    let it = this;
+    tx.push(it.state.player.id);
+    it.state.IO.emit('set_transaction', tx);
+  }
+
+  trustTransaction(tx){
+    let it = this;
+    tx.name = it.state.player.name;
+    it.state.IO.emit('tx_transaction', tx);
+  }
+
   render() {
     let cls = 'wrapper '+ 'city' + this.state.lastPoscity;
     return (
@@ -223,6 +247,7 @@ class App extends Component {
           homelist: this.state.homelist,
           myhomelist: this.state.myhomelist,
           carlist: this.state.carlist,
+          trustlist: this.state.trustlist,
           lastPoscity: this.state.lastPoscity,
           allowMove: this.state.allowMove,
           IO: this.state.IO

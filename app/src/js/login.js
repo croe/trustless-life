@@ -29,10 +29,11 @@ class Login extends Component {
   render() {
 
     return (
-      <div className="app">
+      <div className="app login">
         <main className="container">
-          <div>
-            <p>Name <br />
+          <div className="form_login">
+            <h1>TRUSTLESS LIFE</h1>
+            <p>
               <input ref="playerName" type="text"/>
             </p>
             <p>

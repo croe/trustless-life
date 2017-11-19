@@ -9,51 +9,212 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  &.gene1 { &:after{ background: $gen1;} }
-  &.gene2 { &:after{ background: $gen2;} }
-  &.gene3 { &:after{ background: $gen3;} }
-  &.city1 { &:after{ background: $city1; } }
-  &.city2 { &:after{ background: $city2; } }
-  &.city3 { &:after{ background: $city3; } }
-  &.city4 { &:after{ background: $city4; } }
-  &.city5 { &:after{ background: $city5; } }
-  &.city6 { &:after{ background: $city6; } }
-  &:after {
-    position: fixed;
-    content: 'TRUSTLESS LIFE';
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 1;
-    color: $color-base-white;
-    bottom: -100px;
-    right: -100px;
-    width: 200px;
-    height: 200px;
-    text-align: center;
-    padding: 15px;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    background: $city1;
-    transform-origin: center;
-    transform: rotate(315deg);
-    z-index: 100;
-  }
   .app {
     position: relative;
     width: 100%;
     height: 100%;
+    &.login {
+      background: #38454f;
+    }
   }
 }
 .container {
-  padding: 90px 0 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  .box {
+    &.left {
+      width: 206px;
+      height: 100%;
+      padding: 15px 0 0 25px;
+      background: #38454f;
+      box-sizing: border-box;
+      h2 {
+        position: relative;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        &:after {
+          content: '';
+          position: absolute;
+          bottom: -10px;
+          left: 0;
+          width: 181px;
+          height: 1px;
+          background: #fff;
+        }
+      }
+      .scrollbar-container {
+        height: 100%;
+        margin: 20px 0 0;
+        ul {
+          height: 100%;
+          li {
+            font-size: 14px;
+            line-height: 20px;
+            color: #fff;
+            &:after {
+              content: '';
+            }
+            &.p {
+              &:after {
+                background: url('/images/up.png') no-repeat;
+                background-size: 12px 12px;
+                width: 12px;
+                height: 12px;
+                margin-left: 4px;
+                content: '';
+                display: inline-block;
+              }
+            }
+            &.s {
+              &:after {
+                background: url('/images/down.png') no-repeat;
+                background-size: 12px 12px;
+                width: 12px;
+                height: 12px;
+                margin-left: 4px;
+                content: '';
+                display: inline-block;
+              }
+            }
+            &.m {
+              &:after {
+                background: url('/images/down.png') no-repeat;
+                background-size: 12px 12px;
+                width: 12px;
+                height: 12px;
+                margin-left: 4px;
+                content: '';
+                display: inline-block;
+              }
+            }
+          }
+        }
+      }
+    }
+    &.right {
+      width: 100%;
+      margin-right: 125px;
+      padding: 18px;
+      button {
+        position: fixed;
+        display: block;
+        border: none;
+        margin: 0;
+        padding: 0;
+      }
+      .btn {
+        &_camera {
+          bottom: 37px;
+          right: 37px;
+          //bottom: 20px;
+          //left: 20px;
+          img {
+            width: 73px;
+            height: 73px;
+          }
+        }
+        &_buy {
+          top: (25px + 56px) * 1;
+          right: -30px;
+          img {
+            width: 153px;
+            height: 56px;
+          }
+        }
+        &_sale {
+          top: (25px + 56px) * 2;
+          right: -30px;
+          img {
+            width: 153px;
+            height: 56px;
+          }
+        }
+        &_car {
+          top: (25px + 56px) * 3;
+          right: -30px;
+          img {
+            width: 153px;
+            height: 56px;
+          }
+        }
+        &_trade {
+          top: (25px + 56px) * 4;
+          right: -30px;
+          img {
+            width: 153px;
+            height: 56px;
+          }
+        }
+      }
+
+    }
+  }
+  .form_login {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 200px;
+    height: auto;
+    text-align: center;
+    h1 {
+      font-size: 30px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 40px;
+      position: absolute;
+      display: block;
+      width: 300px;
+      left: -50px;
+      top: -40px;
+      color: #fff;
+    }
+    input {
+      width: 200px;
+      height: 40px;
+      padding: 15px 20px;
+      border-radius: 40px;
+    }
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #38454f;
+      font-size: 20px;
+      font-weight: bold;
+      width: 200px;
+      height: 40px;
+      padding: 15px 20px;
+      border-radius: 40px;
+      background: #fff;
+      text-decoration: none;
+    }
+  }
   .mission {
     width: 100%;
-    padding: 15px;
+    margin-top: -20px;
     box-sizing: border-box;
     h2 {
+      position: relative;
+      font-size: 16px;
+      font-weight: bold;
+      color: #38454f;
       margin: 20px 0 0;
+      padding: 0 0 10px;
+      display: block;
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: #38454f;
+      }
     }
     ul {
       width: 100%;
@@ -105,12 +266,6 @@
           font-size: 25px;
           line-height: 1;
         }
-        &.city1 { &:before{ color: $city1; } }
-        &.city2 { &:before{ color: $city2; } }
-        &.city3 { &:before{ color: $city3; } }
-        &.city4 { &:before{ color: $city4; } }
-        &.city5 { &:before{ color: $city5; } }
-        &.city6 { &:before{ color: $city6; } }
       }
     }
     .complete_list {

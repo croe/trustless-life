@@ -23,6 +23,13 @@ body {
   font-size: 14px;
   line-height: 1em;
   overflow-x: hidden;
+  height: 100%;
+  h1 {
+    font-size: 23px;
+    font-weight: bold;
+    color: #38454f;
+    margin: 0 0 10px;
+  }
 }
 
 ul,li {

@@ -7,6 +7,7 @@ import swal from 'sweetalert'
 import store from 'store';
 import _ from 'lodash';
 import CountUp from 'react-countup';
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import db_mission from './db_mission.json';
 import db_homes from './db_homes.json';
@@ -50,6 +51,33 @@ class Index extends Component {
        * フェーズカードを読んだところがターンの開始
        * 家による回復のあと、カードコスト処理
        */
+      if (json.x === 8){
+        /**
+         * Job Card （ターンの開始）
+         */
+        // 家による回復
+        it.props.myhomelist.map((item, i)=>{
+          it.props.player.status.val -= item.req[0];
+          it.props.player.status.mov += item.res[2];
+          if(item.city === it.props.lastPoscity){
+            if (it.props.player.status.str + item.res[0] <= it.props.player.max.str) {
+              it.props.player.status.str += item.res[0];
+            } else {
+              it.props.player.status.str = it.props.player.max.str;
+            }
+            if (it.props.player.status.int + item.res[1] <= it.props.player.max.int) {
+              it.props.player.status.int += item.res[1];
+            } else {
+              it.props.player.status.int = it.props.player.max.int;
+            }
+          }
+        });
+        if (it.props.player.status.val < 0){
+          it.props.player.status.trs += parseInt(it.props.player.status.val * 5);
+        }
+
+        it.makeListCars();
+      }
       if (json.x === 2) {
         console.log(json)
         /**
@@ -479,6 +507,9 @@ class Index extends Component {
         store.set('myhome', arr);
         // 少し信用が上がる
         it.props.player.status.trs += 5;
+        let tx = {};
+        tx.dir = 1;
+        it.props._it.trustTransaction(tx);
         it.props._it.setPlayerStatus();
         swal({title:'契約完了',icon: "success"});
         it.closeHomeModal();
@@ -506,6 +537,9 @@ class Index extends Component {
         swal({title:'契約解除',icon: "success"});
         // 少し信用が下がる
         it.props.player.status.trs -= Math.floor(Math.random() * 10);
+        let tx = {};
+        tx.dir = -1;
+        it.props._it.trustTransaction(tx);
         it.props._it.setPlayerStatus();
         it.closeHomeModal();
         it.closeCtrlModal();
@@ -519,136 +553,80 @@ class Index extends Component {
     let it = this;
     console.log(item);
 
-    swal({
-      title: 'どちらを出しますか？',
-      icon: 'info',
-      buttons: {
-        cancel: 'Cancel',
-        energy: 'エネルギー',
-        coin: 'コイン'
-      }
-    }).then((value)=>{
-      switch(value) {
-        // 電力確認・電力消費
-        case "energy":
-          swal({ title: "いくつ出しますか？", icon: "info", content: 'input'}).then((amount)=>{
-            if(amount > 0 && it.props.player.status.mov >= amount){
-              swal({ title: "いくら欲しいですか？", icon: "info", content: 'input'}).then((value)=>{
-                if(value > 0){
-                  swal({title: 'トレードを提案しますか？', icon: "info", buttons: true}).then((agree)=>{
-                    if (agree){
-                      // 電力消費
-                      it.props.player.status.mov -= amount;
-                      it.props._it.setPlayerStatus();
-                      // ブロードキャスト用データ整形・通信・追加
-                      let obj = {
-                        "x": 'energy',
-                        "a": parseInt(amount),
-                        "v": parseInt(value),
-                        "fr": it.props.player.id,
-                        "to": parseInt(item.p.id)
-                      };
-                      // 現在のリストに追加する
-                      it.props._it.addTradesList(obj);
-                      console.log(it.props.tradelist)
-                      swal({title: 'Success', icon: 'success'});
-                      it.closeCtrlModal();
-                      it.closeTradeModal();
-                    } else {
-                      swal({ title: "Cancel", icon: "info"}).then((agree)=>{
-                        it.closeCtrlModal();
-                        it.closeTradeModal();
-                      });
-                    }
-                  })
-                }
-              });
-            }
-          });
-          break;
-        case "coin":
-          swal({ title: "いくつ出しますか？", icon: "info", content: 'input'}).then((amount)=>{
-            if(amount > 0){
-              swal({ title: "いくら欲しいですか？", icon: "info", content: 'input'}).then((value)=>{
-                if(value > 0){
-                  swal({title: 'トレードを提案しますか？', icon: "info", buttons: true}).then((agree)=>{
-                    if (agree){
-                      // コイン消費
-                      it.props.player.status.val -= amount;
-                      it.props._it.setPlayerStatus();
-                      // ブロードキャスト用データ整形・通信・追加
-                      let obj = {
-                        "x": 'coin',
-                        "a": parseInt(amount),
-                        "v": parseInt(value),
-                        "fr": it.props.player.id,
-                        "to": parseInt(item.p.id)
-                      };
-                      // 現在のリストに追加する
-                      it.props._it.addTradesList(obj);
-                      console.log(it.props.tradelist)
-                      swal({title: 'Success', icon: 'success'});
-                      it.closeCtrlModal();
-                      it.closeTradeModal();
-                    } else {
-                      swal({ title: "Cancel", icon: "info"}).then((agree)=>{
-                        it.closeCtrlModal();
-                        it.closeTradeModal();
-                      });
-                    }
-                  })
-                }
-              });
-            }
-          });
-          break;
-        case "cancel":
-          swal({ title: "Cancel", icon: "warning"}).then((agree)=>{
-            it.closeCtrlModal();
-            it.closeTradeModal();
-          });
-          break;
+
+    swal({title: "エネルギーいくつを送りますか", icon: "info", content: 'input'}).then((amount) => {
+      if (amount > 0 && it.props.player.status.mov >= amount) {
+        swal({title: "欲しい₿の量を入力してください", icon: "info", content: 'input'}).then((value) => {
+          if (value > 0) {
+            swal({title: 'トレードを提案しますか？', icon: "info", buttons: true}).then((agree) => {
+              if (agree) {
+                // 電力消費
+                it.props.player.status.mov -= amount;
+                it.props._it.setPlayerStatus();
+                // ブロードキャスト用データ整形・通信・追加
+                let obj = {
+                  "a": parseInt(amount),
+                  "v": parseInt(value),
+                  "fr": it.props.player.id,
+                  "to": parseInt(item.p.id)
+                };
+                // 現在のリストに追加する
+                it.props._it.addTradesList(obj);
+                console.log(it.props.tradelist)
+                swal({title: 'Success', icon: 'success'});
+                it.closeCtrlModal();
+                it.closeTradeModal();
+              } else {
+                swal({title: "Cancel", icon: "info"}).then((agree) => {
+                  it.closeCtrlModal();
+                  it.closeTradeModal();
+                });
+              }
+            })
+          }
+        });
       }
     });
-
   }
   doTradeHandleClick(e, _item, i){
     let it = this;
     let item = _item.t;
+    let title;
+    if (it.props.player.id === item.fr){
+      title = 'このトレードをキャンセルしますか？';
+    } else {
+      title = '購入しますか？';
+    }
     swal({
-      title: '購入しますか？',
+      title: title,
       icon: 'info',
       buttons: true
     }).then((agree)=>{
       if (agree) {
         // 購入処理
-        console.log(item);
-        if (item.x === 'energy') {
-          if (it.props.player.status.val >= item.v){
-            // お金を支払う処理
-            it.props.player.status.val -= parseInt(item.v);
-            // 電力を受け取る処理
-            it.props.player.status.mov += parseInt(item.a);
-            // 提供者にお金を渡す処理 -> player状態の更新
-            // 配列から
-            item.to = null;
-            item.fr = null;
-            it.props._it.updateTradeData(_item._id, item);
-            swal({ title: "Success", icon: "success"});
-          }
-        } else if (item.x === 'coin') {
-          if (it.props.player.status.mov >= item.v){
-            // 電力を支払う処理
-            it.props.player.status.mov -= parseInt(item.v);
-            // お金を受け取る処理
-            it.props.player.status.val += parseInt(item.a);
-            // 提供者に電力を渡す処理 -> player状態の更新
-            // 配列から
-            item.to = null;
-            item.fr = null;
-            it.props._it.updateTradeData(_item._id, item);
-            swal({ title: "Success", icon: "success"});
-          }
+        if (it.props.player.id === item.fr){
+          // 自分の場合・キャンセル処理
+          // 電力を受け取る処理
+          it.props.player.status.mov += parseInt(item.a);
+          item.to = null;
+          item.fr = null;
+          it.props._it.setPlayerStatus();
+          it.props._it.updateTradeData(_item._id, item);
+          swal({ title: "Success", icon: "success"});
+        } else if(it.props.player.status.val >= item.v) {
+          // お金を支払う処理
+          it.props.player.status.val -= parseInt(item.v);
+          // 電力を受け取る処理
+          it.props.player.status.mov += parseInt(item.a);
+          // 提供者にお金を渡す処理 -> player状態の更新
+          let tx = [item.to, 'val', item.v]; // [0]:誰に [1]:何を [2]:どれだけ ([3]:誰から）
+          it.props._it.setTransaction(tx);
+          // 配列から削除
+          item.to = null;
+          item.fr = null;
+          it.props._it.setPlayerStatus();
+          it.props._it.updateTradeData(_item._id, item);
+          swal({ title: "Success", icon: "success"});
         }
       } else {
       swal({ title: "Cancel", icon: "warning"});
@@ -740,10 +718,25 @@ class Index extends Component {
       buttons: true
     }).then((agree) => {
       if (agree) {
-        store.clearAll();
         it.closeCtrlModal();
+        store.clearAll();
       } else {
         swal("キャンセルしました");
+      }
+    });
+  }
+  changePlayerHandleClick(){
+    let it = this;
+    it.props._it.getPlayersList();
+    swal({
+      text: '別ユーザーでログイン',
+      content: 'input',
+      icon: "warning"
+    }).then((value) => {
+      if (value) {
+        it.props._it.setState({player: it.props.plist[value].p});
+        // 更新
+        location.pathname = '/';
       }
     });
   }
@@ -790,16 +783,28 @@ class Index extends Component {
         let cost2 = (item.c.req[1])? '知力'+item.c.req[1]:'知力'+ 0;
         let cls = 'city'+item.c.city;
         let info = ' 必要:' + cost1 + ' '+ cost2 + '　確率:' + item.c.rate + '％  報酬:₿' + item.c.res + ' 納期あと' + item.c.limit + 'ターン' ;
-        return (
-          <li className={cls} key={i}>
-            <span>{title}</span>
-            <span>{info}</span>
-            <div className="box_btn">
-              <button onClick={e => this.rejectOfferHandleClick(e, item, i)}>拒否する</button>
-              <button onClick={e => this.doOfferHandleClick(e, item, i)}>仕事する</button>
-            </div>
-          </li>
-        )
+        if (this.props.player.id === item.c.of_f) {
+          return (
+            <li className={cls} key={i}>
+              <span>{title}</span>
+              <span>{info}</span>
+              <div className="box_btn">
+                <button onClick={e => this.doOfferHandleClick(e, item, i)}>仕事する</button>
+              </div>
+            </li>
+          )
+        } else {
+          return (
+            <li className={cls} key={i}>
+              <span>{title}</span>
+              <span>{info}</span>
+              <div className="box_btn">
+                <button onClick={e => this.rejectOfferHandleClick(e, item, i)}>拒否する</button>
+                <button onClick={e => this.doOfferHandleClick(e, item, i)}>仕事する</button>
+              </div>
+            </li>
+          )
+        }
       }
     });
     let compList = this.props.complist.map((item, i)=>{
@@ -810,7 +815,6 @@ class Index extends Component {
     });
     let tradeList = this.props.tradelist.map((_item, i)=>{
       let item = _item.t;
-      console.log(item);
       if (item.to === this.props.player.id || item.fr === this.props.player.id){
         let cls = '';
         if(item.fr === this.props.player.id){ cls = 'self'; }
@@ -822,12 +826,7 @@ class Index extends Component {
           }
         });
         let plyr = _from + " → " + _to;
-        let val;
-        if (item.x === "energy"){
-          val = 'エネルギー' + item.a + "⇆" + item.v + 'コイン';
-        } else {
-          val = 'コイン' + item.a + "⇆" + item.v + 'エネルギー';
-        }
+        let val = 'エネルギー' + item.a + "⇆" + item.v + 'コイン';
         let text = plyr + " " + val;
         return (
           <li className={cls} key={i} onClick={e => this.doTradeHandleClick(e, _item, i)}>{text}</li>
@@ -887,120 +886,155 @@ class Index extends Component {
         )
       }
     })
+    let trustList = this.props.trustlist.map((item, i) => {
+      let cls;
+      if (item.dir === 1) { cls = 'p';
+      } else if(item.dir === 0) { cls = 's';
+      } else if(item.dir === -1) { cls = 'm'; }
+      return (
+        <li key={i} className={cls}>{item.name}</li>
+      )
+    })
     return (
       <div className="app">
-        <header className={'city'+this.props.lastPoscity} onClick={this.openCtrlModal.bind(this)}>
-          <ul>
-            <li><CountUp start={0} end={this.props.player.status.str} duration={3}/>/<CountUp start={0} end={this.props.player.max.str} duration={3}/></li>
-            <li><CountUp start={0} end={this.props.player.status.int} duration={3}/>/<CountUp start={0} end={this.props.player.max.int} duration={3}/></li>
-            <li><CountUp start={0} end={this.props.player.status.mov} duration={3}/></li>
-            <li><CountUp start={0} end={this.props.player.status.val} duration={3}/></li>
-            <li onClick={this.openCtrlModal.bind(this)}> </li>
-          </ul>
+        <header>
+          <h1>{this.props.player.name}</h1>
+          <div className="state state_str">
+            <CountUp start={0} end={this.props.player.status.str} duration={3}/>/<CountUp start={0} end={this.props.player.max.str} duration={3}/>
+          </div>
+          <div className="state state_int">
+            <CountUp start={0} end={this.props.player.status.int} duration={3}/>/<CountUp start={0} end={this.props.player.max.int} duration={3}/>
+          </div>
+          <div className="state state_mov">
+            <CountUp start={0} end={this.props.player.status.mov} duration={3}/>
+          </div>
+          <div className="state state_val">
+            <CountUp start={0} end={this.props.player.status.val} duration={3}/>
+          </div>
+          <button onClick={this.openCtrlModal.bind(this)} className="btn_menu"><img src="./images/button_menu.png"/></button>
         </header>
         <main className="container">
-          <h1>{this.props.player.name}</h1>
-          <div className="mission">
-            <h2>ワークリスト</h2>
-            <ul className="mission_list">
-              {missionList}
-            </ul>
-            <h2>オファーリスト</h2>
-            <ul className="offer_list">
-              {offerList}
-            </ul>
-            <h2>成功したミッション</h2>
-            <ul className="complete_list">
-              {compList}
-            </ul>
-            <h2>トレードリスト</h2>
-            <ul className="trade_list">
-              {tradeList}
-            </ul>
-          </div>
-          <div>
-            <Modal
-              isOpen={this.state.controlModalIsOpen}
-              style={customStyles}
-              contentLabel="Buttons"
-            >
-              <button onClick={this.openMapModal.bind(this)}>読み込み</button>
-              <button onClick={this.openHomeModal.bind(this)}>家を借りる</button>
-              <button onClick={this.openSalehomeModal.bind(this)}>家を返す</button>
-              <button onClick={this.openCarModal.bind(this)}>シェアライド</button>
-              <button onClick={this.openTradeModal.bind(this)}>トレード</button>
-              <button onClick={this.closeCtrlModal.bind(this)}>閉じる</button>
-              <button className="dangerous" onClick={this.resetDataHandleClick.bind(this)}>データリセット</button>
-            </Modal>
-            <Modal
-              isOpen={this.state.mapModalIsOpen}
-              style={customStyles}
-              contentLabel="Map"
-            >
-              <h1>コンポーネント読み込み</h1>
-              <QRreader
-                delay={this.state.delay}
-                style={previewStyle}
-                onError={this.handleError}
-                onScan={this.componentHandleScan}
-              />
-              <button onClick={this.closeMapModal.bind(this)}>閉じる</button>
-            </Modal>
-            <Modal
-              isOpen={this.state.offerModalIsOpen}
-              style={customStyles}
-              contentLabel="Offer"
-            >
-              <h1>誰に手伝いをお願いしますか？</h1>
-              <p>注意：一度手伝いをお願いするとキャンセルすることができません</p>
-              <ul>
-                {offerPlayerList}
+          <div className="box left">
+            <h2>信用度ログ</h2>
+            <PerfectScrollbar>
+              <ul className="trust_list">
+                {trustList}
               </ul>
-              <button onClick={this.closeOfferModal.bind(this)}>閉じる</button>
-            </Modal>
-            <Modal
-              isOpen={this.state.homeModalIsOpen} style={customStyles} contentLabel="Home"
-            >
-              <div className='homeModal'>
-                <h1>現在借りることのできる家</h1>
-                <ul>{homeList}</ul>
-                <button onClick={this.closeHomeModal.bind(this)}>閉じる</button>
-              </div>
-            </Modal>
-            <Modal
-              isOpen={this.state.salehomeModalIsOpen} style={customStyles} contentLabel="Salehome"
-            >
-              <div className='homeModal'>
-                <h1>借りている家</h1>
-                <p>返したい家を選んでください</p>
-                <ul>{myhomeList}</ul>
-                <button onClick={this.closeSalehomeModal.bind(this)}>閉じる</button>
-              </div>
-            </Modal>
-            <Modal
-              isOpen={this.state.carModalIsOpen} style={customStyles} contentLabel="Car"
-            >
-              <div className='carModal'>
-                <h1>シェアライド</h1>
-                <p>現在他の人が行こうとしている街</p>
-                <ul>{carList}</ul>
-                <button onClick={this.closeCarModal.bind(this)}>閉じる</button>
-              </div>
-            </Modal>
-            <Modal
-              isOpen={this.state.tradeModalIsOpen} style={customStyles} contentLabel="Trade"
-            >
-              <div className='tradeModal'>
-                <h1>トレード</h1>
-                <p>誰とトレードしますか？</p>
-                <ul>
-                  {tradePlayerList}
-                </ul>
-                <button onClick={this.closeTradeModal.bind(this)}>閉じる</button>
-              </div>
-            </Modal>
+            </PerfectScrollbar>
+          </div>
+          <div className="box right">
+            <div className="mission">
+              <h2>ワークリスト</h2>
+              <ul className="mission_list">
+                {missionList}
+              </ul>
+              <h2>オファーリスト</h2>
+              <ul className="offer_list">
+                {offerList}
+              </ul>
+              <h2>成功したミッション</h2>
+              <ul className="complete_list">
+                {compList}
+              </ul>
+              <h2>トレードリスト</h2>
+              <ul className="trade_list">
+                {tradeList}
+              </ul>
+            </div>
+            <button onClick={this.openMapModal.bind(this)} className="btn_camera">
+              <img src="./images/camera.png" />
+            </button>
+            <button onClick={this.openHomeModal.bind(this)} className="btn_buy">
+              <img src="./images/button_buyhome.png" />
+            </button>
+            <button onClick={this.openSalehomeModal.bind(this)} className="btn_sale">
+              <img src="./images/button_salehome.png" />
+            </button>
+            <button onClick={this.openCarModal.bind(this)} className="btn_car">
+              <img src="./images/button_car.png" />
+            </button>
+            <button onClick={this.openTradeModal.bind(this)} className="btn_trade">
+              <img src="./images/button_trade.png" />
+            </button>
           </div>
         </main>
+        <div>
+          <Modal
+            isOpen={this.state.controlModalIsOpen}
+            style={customStyles}
+            contentLabel="Buttons"
+          >
+            <button onClick={this.closeCtrlModal.bind(this)}>閉じる</button>
+            <button className="dangerous" onClick={this.resetDataHandleClick.bind(this)}>データリセット</button>
+            <button className="dangerous" onClick={this.changePlayerHandleClick.bind(this)}>別アカウントに変更</button>
+          </Modal>
+          <Modal
+            isOpen={this.state.mapModalIsOpen}
+            style={customStyles}
+            contentLabel="Map"
+          >
+            <h1>読み込み</h1>
+            <QRreader
+              delay={this.state.delay}
+              style={previewStyle}
+              onError={this.handleError}
+              onScan={this.componentHandleScan}
+            />
+            <button onClick={this.closeMapModal.bind(this)}>閉じる</button>
+          </Modal>
+          <Modal
+            isOpen={this.state.offerModalIsOpen}
+            style={customStyles}
+            contentLabel="Offer"
+          >
+            <h1>誰に手伝いをお願いしますか？</h1>
+            <ul>
+              {offerPlayerList}
+            </ul>
+            <button onClick={this.closeOfferModal.bind(this)}>閉じる</button>
+          </Modal>
+          <Modal
+            isOpen={this.state.homeModalIsOpen} style={customStyles} contentLabel="Home"
+          >
+            <div className='homeModal'>
+              <h1>現在借りることのできる家</h1>
+              <ul>{homeList}</ul>
+              <button onClick={this.closeHomeModal.bind(this)}>閉じる</button>
+            </div>
+          </Modal>
+          <Modal
+            isOpen={this.state.salehomeModalIsOpen} style={customStyles} contentLabel="Salehome"
+          >
+            <div className='homeModal'>
+              <h1>借りている家</h1>
+              <p>返したい家を選んでください</p>
+              <ul>{myhomeList}</ul>
+              <button onClick={this.closeSalehomeModal.bind(this)}>閉じる</button>
+            </div>
+          </Modal>
+          <Modal
+            isOpen={this.state.carModalIsOpen} style={customStyles} contentLabel="Car"
+          >
+            <div className='carModal'>
+              <h1>シェアライド</h1>
+              <p>現在他の人が行こうとしている街</p>
+              <ul>{carList}</ul>
+              <button onClick={this.closeCarModal.bind(this)}>閉じる</button>
+            </div>
+          </Modal>
+          <Modal
+            isOpen={this.state.tradeModalIsOpen} style={customStyles} contentLabel="Trade"
+          >
+            <div className='tradeModal'>
+              <h1>トレード</h1>
+              <p>誰とトレードしますか？</p>
+              <ul>
+                {tradePlayerList}
+              </ul>
+              <button onClick={this.closeTradeModal.bind(this)}>閉じる</button>
+            </div>
+          </Modal>
+        </div>
       </div>
     );
   }
@@ -1012,4 +1046,5 @@ export default Index
 // TODO: カーシェアの処理
 
 // TODO: 再ログイン・別アカウントへのログイン
-// TODO: ミッション・ターン（納期）（持てる量の制限）の導入
+
+// TODO: X8を読んだときの処理。
