@@ -71,10 +71,10 @@
             }
             &.s {
               &:after {
-                background: url('/images/down.png') no-repeat;
-                background-size: 12px 12px;
-                width: 12px;
-                height: 12px;
+                background: url('/images/stay.png') no-repeat;
+                background-size: contain;
+                width: 22px;
+                height: 7px;
                 margin-left: 4px;
                 content: '';
                 display: inline-block;
@@ -221,7 +221,7 @@
       li {
         position: relative;
         width: 100%;
-        padding: 10px 15px 10px 45px;
+        padding: 10px 15px;
         margin: 10px 0 0;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -230,6 +230,12 @@
         color: #000;
         display: flex;
         align-items: center;
+        &.city1 { background: $city1};
+        &.city2 { background: $city2};
+        &.city3 { background: $city3};
+        &.city4 { background: $city4};
+        &.city5 { background: $city5};
+        &.city6 { background: $city6};
         span {
           display: inline-block;
           margin: 0 20px 0 0;
@@ -244,27 +250,8 @@
           font-size: 16px;
           color: #fff;
           background: #acacac;
-        }
-        &.gene1 {
-          background: rgba(123, 120, 62, 0.7);
-        }
-        &.gene2 {
-          background: rgba(59, 94, 102, 0.7);
-        }
-        &.gene3 {
-          background: rgba(107, 76, 82, 0.7);
-        }
-        &:before {
-          position: absolute;
-          top: 45%;
-          left: 12px;
-          transform: translateY(-50%);
-          width: 20px;
-          height: 20px;
-          content: "\f318";
-          font-family: Ionicons;
-          font-size: 25px;
-          line-height: 1;
+          position: relative!important;
+          display: inline-block!important;
         }
       }
     }

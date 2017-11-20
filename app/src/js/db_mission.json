@@ -2,123 +2,157 @@
   [
     {
       "id": 1,
-      "title": "ミッション１",
-      "req": [3,0,85],
-      "res": 1,
-      "rate":100,
-      "limit": 2
+      "title": "AREA_A_Work3",
+      "req": [4,5,150],
+      "res": 13,
+      "rate":50,
+      "limit": 7
     },
     {
       "id": 2,
-      "title": "ミッション２",
-      "req": [0,3,85],
-      "res": 1,
-      "rate": 100,
-      "limit": 2
-    },
-    {
-      "id": 3,
-      "title": "ミッション３",
-      "req": [3,1,70],
-      "res": 2,
-      "rate": 90,
-      "limit": 2
-    },
-    {
-      "id": 3,
-      "title": "ミッション４",
-      "req": [2,3,105],
-      "res": 3,
-      "rate": 80,
-      "limit": 2
-    },
-    {
-      "id": 3,
-      "title": "ミッション５",
-      "req": [2,4,110],
-      "res": 4,
+      "title": "AREA_A_Work2",
+      "req": [3,5,130],
+      "res": 10,
       "rate": 60,
-      "limit": 2
+      "limit": 6
     },
+    {
+      "id": 3,
+      "title": "AREA_A_Work1",
+      "req": [3,2,110],
+      "res": 7,
+      "rate": 70,
+      "limit": 5
+    }
+  ],
+  [
     {
       "id": 1,
-      "title": "ミッション６",
-      "req": [3,4,100],
-      "res": 3,
-      "rate": 80,
-      "limit": 2
+      "title": "AREA_B_Work3",
+      "req": [4,4,140],
+      "res": 10,
+      "rate":60,
+      "limit": 7
     },
     {
       "id": 2,
-      "title": "ミッション７",
-      "req": [4,3,100],
-      "res": 3,
-      "rate": 80,
-      "limit": 2
-    },
-    {
-      "id": 3,
-      "title": "ミッション８",
-      "req": [4,4,110],
-      "res": 3,
-      "rate": 70,
-      "limit": 2
-    },
-    {
-      "id": 3,
-      "title": "ミッション９",
-      "req": [5,2,120],
-      "res": 6,
-      "rate": 70,
-      "limit": 2
-    },
-    {
-      "id": 3,
-      "title": "ミッション１０",
-      "req": [7,2,130],
-      "res": 5,
-      "rate": 60,
-      "limit": 2
-    },
-    {
-      "id": 1,
-      "title": "ミッション１１",
-      "req": [6,1,110],
-      "res": 4,
-      "rate": 60,
-      "limit": 2
-    },
-    {
-      "id": 2,
-      "title": "ミッション１２",
-      "req": [1,6,120],
-      "res": 6,
-      "rate": 60,
-      "limit": 2
-    },
-    {
-      "id": 3,
-      "title": "ミッション１３",
-      "req": [7,3,130],
+      "title": "AREA_B_Work2",
+      "req": [3,4,120],
       "res": 8,
-      "rate": 60,
-      "limit": 2
+      "rate": 70,
+      "limit": 6
     },
     {
       "id": 3,
-      "title": "ミッション１４",
-      "req": [3,10,140],
-      "res": 12,
-      "rate": 50,
-      "limit": 2
+      "title": "AREA_B_Work1",
+      "req": [3,2,100],
+      "res": 6,
+      "rate": 80,
+      "limit": 5
+    }
+  ],
+  [
+    {
+      "id": 1,
+      "title": "AREA_C_Work3",
+      "req": [4,3,130],
+      "res": 9,
+      "rate":70,
+      "limit": 7
+    },
+    {
+      "id": 2,
+      "title": "AREA_C_Work2",
+      "req": [4,2,120],
+      "res": 7,
+      "rate": 80,
+      "limit": 6
     },
     {
       "id": 3,
-      "title": "ミッション１５",
-      "req": [10,5,150],
-      "res": 15,
-      "rate": 40,
-      "limit": 2
+      "title": "AREA_C_Work1",
+      "req": [2,2,110],
+      "res": 5,
+      "rate": 90,
+      "limit": 5
+    }
+  ],
+  [
+    {
+      "id": 1,
+      "title": "AREA_D_Work3",
+      "req": [3,3,110],
+      "res": 8,
+      "rate":80,
+      "limit": 7
+    },
+    {
+      "id": 2,
+      "title": "AREA_D_Work2",
+      "req": [2,2,100],
+      "res": 6,
+      "rate": 90,
+      "limit": 6
+    },
+    {
+      "id": 3,
+      "title": "AREA_D_Work1",
+      "req": [1,1,90],
+      "res": 4,
+      "rate": 100,
+      "limit": 5
+    }
+  ],
+  [
+    {
+      "id": 1,
+      "title": "AREA_E_Work3",
+      "req": [1,4,100],
+      "res": 7,
+      "rate":90,
+      "limit": 7
+    },
+    {
+      "id": 2,
+      "title": "AREA_E_Work2",
+      "req": [1,3,90],
+      "res": 5,
+      "rate": 100,
+      "limit": 6
+    },
+    {
+      "id": 3,
+      "title": "AREA_E_Work1",
+      "req": [1,2,80],
+      "res": 3,
+      "rate": 100,
+      "limit": 5
+    }
+  ],
+  [
+    {
+      "id": 1,
+      "title": "AREA_F_Work3",
+      "req": [2,2,90],
+      "res": 6,
+      "rate":100,
+      "limit": 7
+    },
+    {
+      "id": 2,
+      "title": "AREA_F_Work2",
+      "req": [1,1,70],
+      "res": 4,
+      "rate": 100,
+      "limit": 6
+    },
+    {
+      "id": 3,
+      "title": "AREA_F_Work1",
+      "req": [0,1,50],
+      "res": 2,
+      "rate": 100,
+      "limit": 5
     }
   ]
 ]

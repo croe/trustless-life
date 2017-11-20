@@ -26,13 +26,13 @@ class App extends Component {
         "status": {
           "str": 0,
           "int": 0,
-          "mov": 1,
+          "mov": 0,
           "trs": 100,
-          "val": 10
+          "val": 20
         },
         "max": {
-          "str": 3,
-          "int": 3
+          "str": 5,
+          "int": 5
         }
       },
       plist:[],
@@ -46,7 +46,7 @@ class App extends Component {
       carlist: [],
       trustlist: [],
       lastPoscity: 0,
-      allowMove: 0,
+      allowMove: null,
     }
   }
 
@@ -71,12 +71,13 @@ class App extends Component {
         console.log(msg[0].p);
         it.setState({ player: msg[0].p});
         store.set('player', it.state.player);
-        swal({ title: 'Welcome! ' + msg[0].p.name + ' さま' })
+        swal({ title: 'Welcome! ' + msg[0].p.name + ' さん' })
       })
 
       _io.on('catch_players_list', (msg) => {
         console.log(msg);
         it.setState({ plist: msg});
+        store.set('plist', msg);
       })
 
       _io.on('catch_offers_list', (msg) => {
@@ -151,6 +152,10 @@ class App extends Component {
     let cr = store.get('cars');
     if (cr !== undefined){
       it.setState({ carlist: cr});
+    }
+    let pl = store.get('plist');
+    if (pl !== undefined) {
+      it.setState({ plist: pl});
     }
     // 厳密な処理には必要だけど、こんがらがる？
     let aw = store.get('arwmove');
@@ -228,7 +233,9 @@ class App extends Component {
   trustTransaction(tx){
     let it = this;
     tx.name = it.state.player.name;
-    it.state.IO.emit('tx_transaction', tx);
+    // it.state.IO.emit('tx_transaction', tx);
+    it.state.trustlist.unshift(tx);
+    it.setState({trustlist: it.state.trustlist});
   }
 
   render() {

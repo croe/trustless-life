@@ -75,7 +75,7 @@ io.sockets.on('connection', (socket) => {
   socket.on('update_offer_data', (msg) => {
     db.offers.update({_id: msg[0]}, {$set:{'c': msg[1]}}, (err) => {
       db.offers.remove({'c.of_f': null,'c.of_t': null}, { multi: true }, (err)=>{
-        db.offers.remove({'c.limit': {$lt: 1}}, { multi: true }, (err)=>{
+        db.offers.remove({'c.limit': {$lt: 0}}, { multi: true }, (err)=>{
           db.offers.find({}, (err, docs) => {
             socket.emit('catch_offers_list', docs);
             socket.broadcast.emit('catch_offers_list', docs);
