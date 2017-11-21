@@ -47,12 +47,14 @@ class App extends Component {
       trustlist: [],
       lastPoscity: 0,
       allowMove: null,
+      rideFlg: false
     }
   }
 
   componentWillMount() {
     let it = this;
 
+    // let _io = io('http://192.168.1.185:3030/');
     // let _io = io('http://localhost:3030/');
     let _io = io(); // for Production
 
@@ -157,9 +159,18 @@ class App extends Component {
     if (pl !== undefined) {
       it.setState({ plist: pl});
     }
-    // 厳密な処理には必要だけど、こんがらがる？
-    let aw = store.get('arwmove');
-
+    let ts = store.get('trust');
+    if (ts !== undefined){
+      it.setState({ trustlist: ts});
+    }
+    let am = store.get('arwmove');
+    if (am !== undefined) {
+      it.setState({ allowMove: am});
+    }
+    let rd = store.get('rideFlg');
+    if (rd !== undefined) {
+      it.setState({ rideFlg: rd});
+    }
   }
 
   componentDidMount(){
@@ -232,10 +243,11 @@ class App extends Component {
 
   trustTransaction(tx){
     let it = this;
-    tx.name = it.state.player.name;
+    // tx.name = it.state.player.name;
     // it.state.IO.emit('tx_transaction', tx);
     it.state.trustlist.unshift(tx);
     it.setState({trustlist: it.state.trustlist});
+    store.set('trust', it.state.trustlist)
   }
 
   render() {
@@ -257,6 +269,7 @@ class App extends Component {
           trustlist: this.state.trustlist,
           lastPoscity: this.state.lastPoscity,
           allowMove: this.state.allowMove,
+          rideFlg: this.state.rideFlg,
           IO: this.state.IO
         })}
       </div>

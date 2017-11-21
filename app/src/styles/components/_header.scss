@@ -38,10 +38,30 @@ header {
     transform: translateY(-50%);
     font-size: 16px;
     font-weight: bold;
+    .bar {
+      position: relative;
+      display: inline-block;
+      width: 62px;
+      height: 10px;
+      margin: 0 5px 0 0;
+      span {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 7px;
+      }
+    }
   }
   .state_str {
-    left: 200px;
+    left: 180px;
     color: #c44d4d;
+    .bar {
+      border: 2px solid #c44d4d;
+      span {
+        background: #c44d4d;
+      }
+    }
     &:before {
       content: '';
       background: url("/images/icon_str.png") no-repeat;
@@ -54,8 +74,14 @@ header {
     }
   }
   .state_int {
-    left: 283px;
+    left: 330px;
     color: #3d4f82;
+    .bar {
+      border: 2px solid #3d4f82;
+      span {
+        background: #3d4f82;
+      }
+    }
     &:before {
       content: '';
       background: url("/images/icon_int.png") no-repeat;

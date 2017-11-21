@@ -25,6 +25,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   .box {
+
     &.left {
       width: 206px;
       height: 100%;
@@ -55,40 +56,47 @@
             font-size: 14px;
             line-height: 20px;
             color: #fff;
+            position: relative;
             &:after {
               content: '';
             }
             &.p {
-              &:after {
+              &:before {
                 background: url('/images/up.png') no-repeat;
                 background-size: 12px 12px;
                 width: 12px;
                 height: 12px;
                 margin-left: 4px;
                 content: '';
-                display: inline-block;
+                position: absolute;
+                top: 5px;
+                left: -23px;
               }
             }
             &.s {
-              &:after {
+              &:before {
                 background: url('/images/stay.png') no-repeat;
                 background-size: contain;
                 width: 22px;
                 height: 7px;
                 margin-left: 4px;
                 content: '';
-                display: inline-block;
+                position: absolute;
+                top: 5px;
+                left: -23px;
               }
             }
             &.m {
-              &:after {
+              &:before {
                 background: url('/images/down.png') no-repeat;
                 background-size: 12px 12px;
                 width: 12px;
                 height: 12px;
                 margin-left: 4px;
                 content: '';
-                display: inline-block;
+                position: absolute;
+                top: 5px;
+                left: -23px;
               }
             }
           }
@@ -96,22 +104,27 @@
       }
     }
     &.right {
-      width: 100%;
-      margin-right: 125px;
-      padding: 18px;
+      width: calc(100% - 206px);
+      padding: 18px 143px 18px 18px;
       button {
         position: fixed;
         display: block;
         border: none;
         margin: 0;
         padding: 0;
+        &:after {
+          position: absolute;
+          color: #ffffff;
+          font-size: 10px;
+          top: 18px;
+          right: 40px;
+          z-index: 10;
+        }
       }
       .btn {
         &_camera {
           bottom: 37px;
           right: 37px;
-          //bottom: 20px;
-          //left: 20px;
           img {
             width: 73px;
             height: 73px;
@@ -124,6 +137,9 @@
             width: 153px;
             height: 56px;
           }
+          &:after {
+            content: '家を借りる';
+          }
         }
         &_sale {
           top: (25px + 56px) * 2;
@@ -131,6 +147,9 @@
           img {
             width: 153px;
             height: 56px;
+          }
+          &:after {
+            content: '家を返す';
           }
         }
         &_car {
@@ -140,6 +159,9 @@
             width: 153px;
             height: 56px;
           }
+          &:after {
+            content: '移動する';
+          }
         }
         &_trade {
           top: (25px + 56px) * 4;
@@ -147,6 +169,9 @@
           img {
             width: 153px;
             height: 56px;
+          }
+          &:after {
+            content: 'トレードする';
           }
         }
       }
@@ -218,17 +243,21 @@
     }
     ul {
       width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
       li {
         position: relative;
-        width: 100%;
+        width: calc(100% / 3 - 10px);
         padding: 10px 15px;
-        margin: 10px 0 0;
+        margin: 10px 5px 0;
         border: 1px solid #ccc;
         border-radius: 5px;
         box-sizing: border-box;
         font-size: 16px;
-        color: #000;
+        color: #ffffff;
         display: flex;
+        flex-direction: column;
         align-items: center;
         &.city1 { background: $city1};
         &.city2 { background: $city2};
@@ -238,13 +267,25 @@
         &.city6 { background: $city6};
         span {
           display: inline-block;
-          margin: 0 20px 0 0;
         }
         .box_btn {
-          position: absolute;
-          right: 12px;
-          top: 50%;
-          transform: translateY(-50%);
+          display: flex;
+          justify-content: space-around;
+          align-items: flex-start;
+          button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            margin: 0 10px;
+            background: #38454f;
+            color: #ffffff;
+            width: 70px;
+            height: 30px;
+            border: none;
+            border-radius: 30px;
+          }
+
         }
         button {
           font-size: 16px;
@@ -252,6 +293,103 @@
           background: #acacac;
           position: relative!important;
           display: inline-block!important;
+        }
+      }
+      &.mission_list {
+        li {
+          .column {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-direction: column;
+            .left {
+              width: 100%;
+              span {
+                font-size: 12px;
+                &:nth-child(1){
+                  margin: 0 10px 0 0;}
+                &:nth-child(2){
+                  font-size: 30px;
+                  font-weight: bold;
+                  line-height: 30px;
+                  color: #E4514D;
+                  margin: 0 10px 0 0;
+                  &:before {
+                    content: '';
+                    width: 25px;
+                    height: 25px;
+                    background: url("/images/icon_str.png") no-repeat;
+                    background-size: contain;
+                    display: inline-block;
+                    margin: 0 5px 0 0;
+                  }
+                }
+                &:nth-child(3){
+                  font-size: 30px;
+                  font-weight: bold;
+                  line-height: 30px;
+                  color: #3d4f82;
+                  margin: 0;
+                  &:before {
+                    content: '';
+                    width: 25px;
+                    height: 25px;
+                    background: url("/images/icon_int.png") no-repeat;
+                    background-size: contain;
+                    display: inline-block;
+                    margin: 0 5px 0 0;
+                  }
+                }
+              }
+            }
+            .right {
+              margin: 10px 0 0;
+              width: 100%;
+              span {
+                font-size: 12px;
+                &:nth-child(2){
+                  font-size: 30px;
+                  font-weight: bold;
+                  line-height: 30px;
+                  &:before {
+                    content: '';
+                    width: 20px;
+                    height: 20px;
+                    background: url("/images/icon_val2.png") no-repeat;
+                    background-size: contain;
+                    display: inline-block;
+                  }
+                }
+              }
+            }
+            .rate {
+              margin: 10px 0 0;
+              width: 100%;
+              span {
+                font-size: 12px;
+                &:nth-child(2){
+                  font-size: 30px;
+                  font-weight: bold;
+                  line-height: 30px;
+                  &:after {
+                    content: '%';
+                    font-size: 16px;
+                  }
+                }
+              }
+            }
+          }
+          .limit {
+            width: calc(100% - 5px);
+            font-size: 12px;
+            margin: 10px 0;
+            span {
+              margin: 0 5px;
+              font-size: 30px;
+              font-weight: bold;
+              line-height: 30px;
+            }
+          }
         }
       }
     }
@@ -282,16 +420,6 @@
         &:before {
           display: none;
         }
-      }
-    }
-    .mission_list {
-      li {
-
-      }
-    }
-    .offer_list {
-      li {
-
       }
     }
   }
