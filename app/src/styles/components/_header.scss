@@ -54,7 +54,7 @@ header {
     }
   }
   .state_str {
-    left: 180px;
+    left: 150px;
     color: #c44d4d;
     .bar {
       border: 2px solid #c44d4d;
@@ -74,7 +74,7 @@ header {
     }
   }
   .state_int {
-    left: 330px;
+    left: 290px;
     color: #3d4f82;
     .bar {
       border: 2px solid #3d4f82;
@@ -94,7 +94,7 @@ header {
     }
   }
   .state_mov {
-    right: 246px;
+    right: 210px;
     color: #6b683b;
     &:before {
       content: '';
@@ -108,7 +108,7 @@ header {
     }
   }
   .state_val {
-    right: 172px;
+    right: 150px;
     color: #38454f;
     &:before {
       content: '';

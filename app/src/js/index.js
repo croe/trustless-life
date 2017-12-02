@@ -120,7 +120,7 @@ class Index extends Component {
         /**
          * 家のリストを更新
          */
-        it.makeHomeRent();
+        it.makeListHomes();
         /**
          * 仕事の納期を記録する
          */
@@ -488,7 +488,7 @@ class Index extends Component {
     it.closeOfferModal();
   }
 
-  makeHomeRent() {
+  makeListHomes() {
     let it = this;
     let r = [];
     do {
@@ -512,7 +512,7 @@ class Index extends Component {
         let pulled = _.pullAt(it.props.homelist, [i]);
         it.props._it.setState({homelist: it.props.homelist});
         store.set('homes', it.props.homelist);
-        it.makeHomeRent();
+        it.makeListHomes();
         let arr = it.props.myhomelist;
         arr.push(item);
         it.props._it.setState({myhomelist: arr});
@@ -545,7 +545,7 @@ class Index extends Component {
         let pulled = _.pullAt(it.props.myhomelist, [i]);
         it.props._it.setState({myhomelist: it.props.myhomelist});
         store.set('myhome', it.props.myhomelist);
-        it.makeHomeRent();
+        it.makeListHomes();
         swal({title: '契約解除', icon: "success"});
         // 少し信用が下がる
         it.props.player.status.trs -= Math.floor(Math.random() * 10);
@@ -564,7 +564,6 @@ class Index extends Component {
   makeTradeHandleClick(e, item, i) {
     let it = this;
     console.log(item);
-
 
     swal({title: "エネルギーいくつを送りますか", icon: "info", content: 'input'}).then((amount) => {
       if (amount > 0 && it.props.player.status.mov >= amount) {
@@ -812,7 +811,7 @@ class Index extends Component {
     const previewStyle = {
       heigth: 240,
       width: 320
-    }
+    };
     const customStyles = {
       overlay: {background: 'rgba(0,0,0, .4)'},
       content: {
@@ -825,6 +824,9 @@ class Index extends Component {
         width: '72%',//openしているコンテンツの幅を変える,
         zIndex: '100'
       }
+    };
+    let navHeight = {
+      height: window.innerHeight
     };
     let missionList = this.props.mlist.map((item, i) => {
       let cls = 'city' + item.city;
@@ -1050,7 +1052,7 @@ class Index extends Component {
           </button>
         </header>
         <main className="container">
-          <div className="box left">
+          <div className="box left" style={navHeight}>
             <h2>信用度ログ</h2>
             <PerfectScrollbar>
               <ul className="trust_list">

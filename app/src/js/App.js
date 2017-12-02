@@ -17,6 +17,7 @@ class App extends Component {
       isHandshake: false,
       isCompleteInitialize: false,
       isInitPlayer: false,
+      lang: 'en',
       IO: {},
       player: {
         "id": 0,
@@ -55,8 +56,8 @@ class App extends Component {
     let it = this;
 
     // let _io = io('http://192.168.1.185:3030/');
-    // let _io = io('http://localhost:3030/');
-    let _io = io(); // for Production
+    let _io = io('http://localhost:3030/');
+    // let _io = io(); // for Production
 
     _io.on('connect', () => {
       it.setState({
@@ -106,8 +107,8 @@ class App extends Component {
 
       _io.on('catch_trust_transaction', (msg) =>{
         console.log(msg)
-        it.state.trustlist.unshift(msg);
-        it.setState({trustlist: it.state.trustlist});
+        // 信用に関する登録が行われた時の処理
+
       })
 
     })
@@ -115,6 +116,10 @@ class App extends Component {
     /**
      * Initialize Status
      */
+    let lng = store.get('lang');
+    if (lng !== undefined){
+      it.setState({ lang: lng });
+    }
     let st = store.get('player');
     if (st !== undefined){
       it.setState({ player: st })
@@ -243,8 +248,7 @@ class App extends Component {
 
   trustTransaction(tx){
     let it = this;
-    // tx.name = it.state.player.name;
-    // it.state.IO.emit('tx_transaction', tx);
+    it.state.IO.emit('tx_transaction', tx);
     it.state.trustlist.unshift(tx);
     it.setState({trustlist: it.state.trustlist});
     store.set('trust', it.state.trustlist)
@@ -257,6 +261,7 @@ class App extends Component {
         {this.props.children && React.cloneElement(this.props.children, {
           _it: this,
           isHandshake: this.state.isHandshake,
+          lang: this.state.lang,
           player: this.state.player,
           plist: this.state.plist,
           mlist: this.state.mlist,
