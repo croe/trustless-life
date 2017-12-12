@@ -48,7 +48,8 @@ class App extends Component {
       trustlist: [],
       lastPoscity: 0,
       allowMove: null,
-      rideFlg: false
+      rideFlg: false,
+      markerTrust: 1
     }
   }
 
@@ -108,7 +109,7 @@ class App extends Component {
       _io.on('catch_trust_transaction', (msg) =>{
         console.log(msg)
         // 信用に関する登録が行われた時の処理
-
+        it.setState({ markerTrust: msg.dir });
       })
 
     })
@@ -275,7 +276,8 @@ class App extends Component {
           lastPoscity: this.state.lastPoscity,
           allowMove: this.state.allowMove,
           rideFlg: this.state.rideFlg,
-          IO: this.state.IO
+          IO: this.state.IO,
+          MKTrust: this.state.markerTrust
         })}
       </div>
     )

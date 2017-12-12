@@ -3,84 +3,120 @@
     margin: 10px 0 0;
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: space-between;
+    align-items: stretch;
+    justify-content: flex-start;
     li {
+      width: calc(100% / 3 - 10px);
       padding: 10px 20px;
-      width: 100%;
-      margin: 4px 0;
+      margin: 5px;
       color: $color-base-white;
       font-weight: bold;
       font-size: 16px;
-      &.city1 {
-        background: $city1;
-      }
-      &.city2 {
-        background: $city2;
-      }
-      &.city3 {
-        background: $city3;
-      }
-      &.city4 {
-        background: $city4;
-      }
-      &.city5 {
-        background: $city5;
-      }
-      &.city6 {
-        background: $city6;
-      }
-      span {
-        &:nth-child(1) {
-          &:after {
-            display: inline-block;
-            content: attr(data-val);
-            padding: 10px;
-            background: yellow;
-            color: #000;
-            border-radius: 50%;
+      border-radius: 5px;
+      &.city1 {  background: $city1;  }
+      &.city2 {  background: $city2;  }
+      &.city3 {  background: $city3;  }
+      &.city4 {  background: $city4;  }
+      &.city5 {  background: $city5;  }
+      &.city6 {  background: $city6;  }
+      &.disabled {  opacity: 0.5;
+        .box_btn {
+          button {
+            width: 150px;
           }
         }
-        &:nth-child(2) {
-          &:after {
-            display: inline-block;
-            content: attr(data-val);
-            padding: 10px;
-            background: yellow;
-            color: #000;
-            border-radius: 50%;
+      }
+      .key_dist {
+        span {
+          font-size: 12px;
+          &:nth-child(2){
+            font-size: 30px;
+            font-weight: bold;
+            line-height: 30px;
           }
         }
-        &:nth-child(3) {
-          &:after {
-            display: inline-block;
-            content: attr(data-val);
-            padding: 10px;
-            background: yellow;
-            color: #000;
-            border-radius: 50%;
+      }
+      .key_require {
+        span {
+          font-size: 12px;
+          &:nth-child(2){
+            font-size: 30px;
+            font-weight: bold;
+            line-height: 30px;
+            &:before {
+              content: '';
+              width: 20px;
+              height: 20px;
+              background: url("/images/icon_val2.png") no-repeat;
+              background-size: contain;
+              display: inline-block;
+            }
           }
         }
-        &:nth-child(4) {
-          &:after {
-            display: inline-block;
-            content: attr(data-val);
-            padding: 10px;
-            background: yellow;
-            color: #000;
-            border-radius: 50%;
+      }
+      .key_recover {
+        span {
+          font-size: 12px;
+          &:nth-child(2){
+            font-size: 30px;
+            font-weight: bold;
+            line-height: 30px;
+            &:before {
+              content: '';
+              width: 20px;
+              height: 20px;
+              background: url("/images/icon_str.png") no-repeat;
+              background-size: contain;
+              display: inline-block;
+            }
+          }
+          &:nth-child(3){
+            font-size: 30px;
+            font-weight: bold;
+            line-height: 30px;
+            &:before {
+              content: '';
+              width: 20px;
+              height: 20px;
+              background: url("/images/icon_int.png") no-repeat;
+              background-size: contain;
+              display: inline-block;
+            }
+          }
+          &:nth-child(4){
+            font-size: 30px;
+            font-weight: bold;
+            line-height: 30px;
+            &:before {
+              content: '';
+              width: 20px;
+              height: 20px;
+              background: url("/images/icon_ene.png") no-repeat;
+              background-size: contain;
+              display: inline-block;
+            }
           }
         }
-        &:nth-child(5) {
-          &:after {
-            display: inline-block;
-            content: attr(data-val);
-            padding: 10px;
-            background: yellow;
-            color: #000;
-            border-radius: 50%;
-          }
+      }
+      .box_btn {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        margin: 10px 0 0;
+        button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 12px;
+          margin: 0 10px;
+          background: #38454f;
+          color: #ffffff;
+          width: 70px;
+          height: 30px;
+          border: none;
+          border-radius: 30px;
         }
+
       }
     }
   }
@@ -114,84 +150,70 @@
     margin: 10px 0 0;
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: space-between;
+    align-items: stretch;
+    justify-content: flex-start;
     li {
       padding: 10px 20px;
-      width: 100%;
-      margin: 4px 0;
+      width: calc(100% / 3 - 10px);
+      margin: 5px;
       color: $color-base-white;
       font-weight: bold;
       font-size: 16px;
-      &.city1 {
-        background: $city1;
-      }
-      &.city2 {
-        background: $city2;
-      }
-      &.city3 {
-        background: $city3;
-      }
-      &.city4 {
-        background: $city4;
-      }
-      &.city5 {
-        background: $city5;
-      }
-      &.city6 {
-        background: $city6;
+      border-radius: 5px;
+      &.city1 {  background: $city1;  }
+      &.city2 {  background: $city2;  }
+      &.city3 {  background: $city3;  }
+      &.city4 {  background: $city4;  }
+      &.city5 {  background: $city5;  }
+      &.city6 {  background: $city6;  }
+      &.disabled {  opacity: 0.5;
+        .box_btn {
+          button {
+            width: 150px;
+          }
+        }
       }
       span {
-        &:nth-child(1) {
-          &:after {
-            display: inline-block;
-            content: attr(data-val);
-            padding: 10px;
-            background: yellow;
-            color: #000;
-            border-radius: 50%;
+        font-size: 12px;
+        &:nth-child(2){
+          font-size: 30px;
+          font-weight: bold;
+          line-height: 30px;
+        }
+      }
+      .key_require {
+        span {
+          &:nth-child(2){
+            &:before {
+              content: '';
+              width: 20px;
+              height: 20px;
+              background: url("/images/icon_ene.png") no-repeat;
+              background-size: contain;
+              display: inline-block;
+            }
           }
         }
-        &:nth-child(2) {
-          &:after {
-            display: inline-block;
-            content: attr(data-val);
-            padding: 10px;
-            background: yellow;
-            color: #000;
-            border-radius: 50%;
-          }
+      }
+      .box_btn {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        margin: 10px 0 0;
+        button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 12px;
+          margin: 0 10px;
+          background: #38454f;
+          color: #ffffff;
+          width: 70px;
+          height: 30px;
+          border: none;
+          border-radius: 30px;
         }
-        &:nth-child(3) {
-          &:after {
-            display: inline-block;
-            content: attr(data-val);
-            padding: 10px;
-            background: yellow;
-            color: #000;
-            border-radius: 50%;
-          }
-        }
-        &:nth-child(4) {
-          &:after {
-            display: inline-block;
-            content: attr(data-val);
-            padding: 10px;
-            background: yellow;
-            color: #000;
-            border-radius: 50%;
-          }
-        }
-        &:nth-child(5) {
-          &:after {
-            display: inline-block;
-            content: attr(data-val);
-            padding: 10px;
-            background: yellow;
-            color: #000;
-            border-radius: 50%;
-          }
-        }
+
       }
     }
   }

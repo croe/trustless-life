@@ -2,141 +2,121 @@
   {
     "d_id": 1,
     "title": "CAR-A",
-    "from": 1,
-    "to": 2,
-    "req": 2
+    "to": 1,
+    "req": [3, 150]
   },
   {
     "d_id": 2,
     "title": "CAR-B",
-    "from": 2,
-    "to": 3,
-    "req": 3
+    "to": 1,
+    "req": [4, 140]
   },
   {
     "d_id": 3,
     "title": "CAR-C",
-    "from": 3,
-    "to": 4,
-    "req": 4
+    "to": 1,
+    "req": [5, 130]
   },
   {
     "d_id": 4,
     "title": "CAR-D",
-    "from": 4,
-    "to": 5,
-    "req": 3
+    "to": 2,
+    "req": [3, 140]
   },
   {
     "d_id": 5,
     "title": "CAR-E",
-    "from": 5,
-    "to": 6,
-    "req": 4
+    "to": 2,
+    "req": [4, 130]
   },
   {
     "d_id": 6,
     "title": "CAR-F",
-    "from": 6,
-    "to": 5,
-    "req": 2
+    "to": 2,
+    "req": [5, 120]
   },
   {
     "d_id": 7,
     "title": "CAR-G",
-    "from": 4,
     "to": 3,
-    "req": 5
+    "req": [3, 130]
   },
   {
     "d_id": 8,
     "title": "CAR-H",
-    "from": 3,
-    "to": 2,
-    "req": 3
+    "to": 3,
+    "req": [4, 120]
   },
   {
     "d_id": 9,
     "title": "CAR-I",
-    "from": 2,
-    "to": 1,
-    "req": 6
+    "to": 3,
+    "req": [5, 110]
   },
   {
     "d_id": 10,
     "title": "CAR-J",
-    "from": 2,
-    "to": 1,
-    "req": 3
+    "to": 4,
+    "req": [3, 120]
   },
   {
     "d_id": 11,
     "title": "CAR-K",
-    "from": 1,
-    "to": 3,
-    "req": 4
+    "to": 4,
+    "req": [4, 110]
   },
   {
     "d_id": 12,
     "title": "CAR-L",
-    "from": 2,
     "to": 4,
-    "req": 4
+    "req": [5, 100]
   },
   {
     "d_id": 13,
     "title": "CAR-M",
-    "from": 3,
-    "to": 6,
-    "req": 5
+    "to": 5,
+    "req": [3, 110]
   },
   {
     "d_id": 14,
     "title": "CAR-N",
-    "from": 6,
-    "to": 4,
-    "req": 6
+    "to": 5,
+    "req": [4, 100]
   },
   {
     "d_id": 15,
     "title": "CAR-O",
-    "from": 5,
-    "to": 2,
-    "req": 2
+    "to": 5,
+    "req": [5, 90]
   },
   {
     "d_id": 16,
     "title": "CAR-P",
-    "from": 4,
-    "to": 1,
-    "req": 4
+    "to": 6,
+    "req": [3, 100]
   },
   {
     "d_id": 17,
     "title": "CAR-Q",
-    "from": 2,
-    "to": 5,
-    "req": 5
+    "to": 6,
+    "req": [4, 90]
   },
   {
     "d_id": 18,
     "title": "CAR-R",
-    "from": 1,
     "to": 6,
-    "req": 2
+    "req": [5, 80]
   },
   {
     "d_id": 19,
     "title": "CAR-S",
-    "from": 1,
     "to": 5,
-    "req": 3
+    "req": [2, 80]
   },
   {
     "d_id": 20,
     "title": "CAR-T",
-    "from": 2,
-    "to": 1,
-    "req": 4
+    "to": 6,
+    "req": [2, 80]
   }
 ]

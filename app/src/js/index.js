@@ -110,7 +110,7 @@ class Index extends Component {
         });
         if (it.props.player.status.val < 0) {
           it.props.player.status.trs -= 5;
-          let tx = {dir: -1, msg: '借金があります'};
+          let tx = {dir: -1, msg: '借金があるため信用度が減少しました'};
           it.props._it.trustTransaction(tx);
         }
         /**
@@ -131,8 +131,8 @@ class Index extends Component {
             let pulled = _.pullAt(it.props.mlist, [i]);
             it.props._it.setState({mlist: it.props.mlist});
             store.set('mission', it.props.mlist);
-            it.props.player.status.trs -= 4;
-            let tx = {dir: -1, msg: '仕事の期限が過ぎました'};
+            it.props.player.status.trs -= 7;
+            let tx = {dir: -1, msg: '仕事の期限が過ぎたため信用度が減少しました。'};
             it.props._it.trustTransaction(tx);
             it.props._it.setPlayerStatus();
           }
@@ -145,8 +145,8 @@ class Index extends Component {
             if (_item.limit < 0) {
               // TODO: 両方とも信用を少し失うようにする
               // TODO: マイナスになるとエラー
-              it.props.player.status.trs -= 3;
-              let tx = {dir: -1};
+              it.props.player.status.trs -= 7;
+              let tx = {dir: -1, msg: '仕事の期限が過ぎたため信用度が減少しました。'};
               it.props._it.trustTransaction(tx);
               it.props.setPlayerStatus();
             }
@@ -204,9 +204,6 @@ class Index extends Component {
             } else if (selcp2.id === 4) {
               swal({title: 'アートをのぞく時、アートもまたこちらをのぞいているのだ'});
               it.props.player.max.int += 2;
-              it.props.player.status.trs -= 3;
-              let tx = {dir: -1, msg: '何かよくないものを見てしまった'};
-              it.props._it.trustTransaction(tx);
               it.props._it.setPlayerStatus();
 
             }
@@ -239,7 +236,7 @@ class Index extends Component {
             } else {
               swal({title: "場所が違うようです！", icon: "error"});
               it.props.player.status.trs -= 2;
-              let tx = {dir: -1, msg: '不正な移動をした'};
+              let tx = {dir: -1, msg: '不正な移動をしたため信用度が減少した'};
               it.props._it.trustTransaction(tx);
               it.props._it.setPlayerStatus();
               it.closeMapModal();
@@ -259,10 +256,10 @@ class Index extends Component {
         /**
          * スラム街
          */
-        let parcent = Math.floor(1 + Math.random() * 100);
-        let title = '事件に巻き込まれてしまった！次の仕事はできそうにない・・';
         // '何か起こったようです、ハプニングカードを引いてください'
         if (json.s === 5) {
+          let parcent = Math.floor(1 + Math.random() * 100);
+          let title = '事件に巻き込まれてしまった！次の仕事はできそうにない・・';
           if (parcent > parseInt(it.props.player.status.trs - 20)) {
             swal({title: title, icon: 'error'}).then((agree) => {
               if (agree) {
@@ -272,8 +269,8 @@ class Index extends Component {
                     let pulled = _.pullAt(it.props.mlist, [i]);
                     it.props._it.setState({mlist: it.props.mlist});
                     store.set('mission', it.props.mlist);
-                    it.props.player.status.trs -= 4;
-                    let tx = {dir: -1, msg: '仕事の期限が過ぎました'};
+                    it.props.player.status.trs -= 10;
+                    let tx = {dir: -1, msg: '仕事の期限が過ぎたため信用度が減少しました'};
                     it.props._it.trustTransaction(tx);
                     it.props._it.setPlayerStatus();
                   }
@@ -295,22 +292,11 @@ class Index extends Component {
           it.closeCtrlModal();
           it.setState({scanFlg: true});
         }
-        // TODO: ハプニングの処理は一旦停止。わかりにくくなる
-        // else {
-        //   if (parcent > parseInt(it.props.player.status.trs - 5)) {
-        //     swal({title: title, icon: 'error'}).then((agree) => {
-        //       if (agree) {
-        //         it.closeMapModal();
-        //         it.closeCtrlModal();
-        //         it.setState({scanFlg: true});
-        //       }
-        //     })
-        //   } else {
-        //     it.closeMapModal();
-        //     it.closeCtrlModal();
-        //     it.setState({scanFlg: true});
-        //   }
-        // }
+
+        /**
+         * 移動権の消失
+         **/
+
       }
     }
   }
@@ -321,7 +307,7 @@ class Index extends Component {
       && it.props.player.status.int >= item.req[1]
       && it.props.lastPoscity === item.city) {
       // 成否判定 ->
-      if (100 - item.rate < Math.floor(Math.random() * 100)) {
+      if (100 - item.rate <= Math.floor(Math.random() * 100)) {
         // 成功ならコスト払って報酬と信用を獲る
         swal({text: "ミッション成功しました！", icon: "success"})
         it.props.player.status.str = it.props.player.status.str - item.req[0];
@@ -329,7 +315,7 @@ class Index extends Component {
         it.props.player.status.trs = it.props.player.status.trs + item.req[2] / 10;
         it.props.player.status.val = it.props.player.status.val + item.res;
         store.set('player', it.props.player)
-        let tx = {dir: 1, msg: '仕事の実績が追加されました'};
+        let tx = {dir: 1, msg: '仕事の実績が追加され、信用度が上昇しました'};
         it.props._it.trustTransaction(tx);
         // ミッション完了で完了リストに保存される
         it.AddCompleteMission(item.gen, item.city);
@@ -339,7 +325,7 @@ class Index extends Component {
         swal({text: "Failed..", icon: "error"})
         it.props.player.status.trs = it.props.player.status.trs - 5;
         store.set('player', it.props.player)
-        let tx = {dir: -1, msg: '仕事を失敗しました'};
+        let tx = {dir: -1, msg: '仕事に失敗したため信用度が減少しました'};
         it.props._it.trustTransaction(tx);
       }
       let pulled = _.pullAt(it.props.mlist, [i]);
@@ -373,16 +359,16 @@ class Index extends Component {
               it.props.player.status.int = it.props.player.status.int - item.req[1];
               it.props.player.status.trs = it.props.player.status.trs + Math.floor(item.req[2] / 10);
               it.props.player.status.val = it.props.player.status.val + item.res;
-              let tx = {dir: 1, msg: '仕事の実績が追加されました'};
+              let tx = {dir: 1, msg: '仕事の実績が追加され、信用度が上昇しました'};
               it.props._it.trustTransaction(tx);
               it.props._it.setPlayerStatus();
               // ミッション完了で完了リストに保存される
               it.AddCompleteMission(item.gen, item.city);
             } else {
               // 失敗なら信用がなくなるだけ
-              swal({title: "Failed..", icon: "error"})
+              swal({title: "仕事に失敗した..", icon: "error"})
               it.props.player.status.trs -= 5;
-              let tx = {dir: -1, msg: '仕事を失敗しました'};
+              let tx = {dir: -1, msg: '仕事に失敗したため信用度が減少しました'};
               it.props._it.trustTransaction(tx);
               it.props._it.setPlayerStatus();
             }
@@ -397,21 +383,21 @@ class Index extends Component {
           // 手伝う側の場合
           if (100 - item.rate < Math.floor(Math.random() * 100)) {
             // 成功ならコスト払って報酬と信用を獲る
-            swal({title: "ミッション成功しました！", icon: "success"})
+            swal({title: "仕事に成功しました！", icon: "success"})
             it.props.player.status.str = it.props.player.status.str - item.req[0];
             it.props.player.status.int = it.props.player.status.int - item.req[1];
             it.props.player.status.trs = it.props.player.status.trs + Math.floor(item.req[2] / 10);
             it.props.player.status.val = it.props.player.status.val + item.res;
-            let tx = {dir: 1, msg: '仕事の実績が追加されました'};
+            let tx = {dir: 1, msg: '仕事の実績が追加され、信用度が上昇しました'};
             it.props._it.trustTransaction(tx);
             it.props._it.setPlayerStatus();
             // ミッション完了で完了リストに保存される
             it.AddCompleteMission(item.gen, item.city);
           } else {
             // 失敗なら信用がなくなるだけ
-            swal({title: "Failed..", icon: "error"})
+            swal({title: "仕事に失敗した..", icon: "error"})
             it.props.player.status.trs -= 5;
-            let tx = {dir: -1, msg: '仕事を失敗しました'};
+            let tx = {dir: -1, msg: '仕事に失敗したため信用度が減少しました'};
             it.props._it.trustTransaction(tx);
             it.props._it.setPlayerStatus();
           }
@@ -512,14 +498,13 @@ class Index extends Component {
         let pulled = _.pullAt(it.props.homelist, [i]);
         it.props._it.setState({homelist: it.props.homelist});
         store.set('homes', it.props.homelist);
-        it.makeListHomes();
         let arr = it.props.myhomelist;
         arr.push(item);
         it.props._it.setState({myhomelist: arr});
         store.set('myhome', arr);
         // 少し信用が上がる
-        it.props.player.status.trs += 5;
-        let tx = {dir: 1, msg: '家を契約しました'};
+        it.props.player.status.trs += 5 + Math.floor(Math.random() * 5);
+        let tx = {dir: 1, msg: '家を契約したため信用度が上昇しました'};
         it.props._it.trustTransaction(tx);
         it.props._it.setPlayerStatus();
         swal({title: '契約完了', icon: "success"});
@@ -545,11 +530,10 @@ class Index extends Component {
         let pulled = _.pullAt(it.props.myhomelist, [i]);
         it.props._it.setState({myhomelist: it.props.myhomelist});
         store.set('myhome', it.props.myhomelist);
-        it.makeListHomes();
         swal({title: '契約解除', icon: "success"});
         // 少し信用が下がる
-        it.props.player.status.trs -= Math.floor(Math.random() * 10);
-        let tx = {dir: -1, msg: '家の契約を解除しました'};
+        it.props.player.status.trs -= 7 + Math.floor(Math.random() * 7);
+        let tx = {dir: -1, msg: '家を解約したため信用度が減少しました'};
         it.props._it.trustTransaction(tx);
         it.props._it.setPlayerStatus();
         it.closeHomeModal();
@@ -656,8 +640,8 @@ class Index extends Component {
     }).then((agree) => {
       if (agree) {
         // 信用判定・電力判定
-        if (it.props.player.status.mov - item.req >= 0) {
-          it.props.player.status.mov -= item.req;
+        if (it.props.player.status.mov - item.req[0] >= 0) {
+          it.props.player.status.mov -= item.req[0];
           it.props._it.setState({
             player: it.props.player,
             allowMove: item.to,
@@ -679,19 +663,11 @@ class Index extends Component {
   makeListCars() {
     let it = this;
     let r = [];
-    let trastV;
-    if (it.props.player.status.trs >= 120) {
-      trastV = 8;
-    } else if (it.props.player.status.trs >= 100) {
-      trastV = 6;
-    } else {
-      trastV = 4;
-    }
     do {
       let arr = db_cars[Math.floor(Math.random() * db_cars.length)];
       r.push(arr);
       r = _.uniq(r);
-    } while (r.length < trastV);
+    } while (r.length < 6);
     it.props._it.setState({carlist: r});
     store.set('cars', r)
   }
@@ -728,14 +704,7 @@ class Index extends Component {
     if (arr !== undefined && arr.length > 0) {
       it.props._it.setState({homelist: store.get('homes')});
     } else {
-      let r = [];
-      do {
-        let arr = db_homes[Math.floor(Math.random() * db_homes.length)];
-        r.push(arr);
-        r = _.uniq(r);
-      } while (r.length < 6);
-      store.set('homes', r);
-      it.props._it.setState({homelist: r});
+      it.makeListHomes();
     }
   }
 
@@ -752,7 +721,14 @@ class Index extends Component {
   }
 
   openCarModal() {
+    let it = this;
     this.setState({carModalIsOpen: true})
+    let arr = store.get('cars');
+    if (arr !== undefined && arr.length > 0) {
+      it.props._it.setState({carlist: store.get('cars')});
+    } else {
+      it.makeListCars();
+    }
   }
 
   closeCarModal() {
@@ -946,50 +922,134 @@ class Index extends Component {
     })
     let homeList = this.props.homelist.map((item, i) => {
       let cls = 'city' + item.city;
+      let dist;
+      if (item.city === 1) { dist = 'A';
+      } else if(item.city === 2){ dist = 'B';
+      } else if(item.city === 3){ dist = 'C';
+      } else if(item.city === 4){ dist = 'D';
+      } else if(item.city === 5){ dist = 'E';
+      } else if(item.city === 6){ dist = 'F'; }
       if (item.req[1] <= this.props.player.status.trs) {
         return (
-          <li className={cls} key={i} onClick={e => this.rentHomeHandleClick(e, item, i)}>
-            <span data-val={item.req[0]}>毎ターン</span>
-            <span data-val={item.res[0]}>体力回復</span>
-            <span data-val={item.res[1]}>知力回復</span>
-            <span data-val={item.res[2]}>電力回復</span>
+          <li className={cls} key={i}>
+            <div className="key_dist">
+              <span>家の場所：</span>
+              <span>{dist}</span>
+            </div>
+            <div className="key_require">
+              <span>必要：</span>
+              <span>{item.req[0]}</span>
+              <span>/ターン</span>
+            </div>
+            <div className="key_recover">
+              <span>回復：</span>
+              <span>{item.res[0]}</span>
+              <span>{item.res[1]}</span>
+              <span>{item.res[2]}</span>
+            </div>
+            <div className="box_btn">
+              <button onClick={e => this.rentHomeHandleClick(e, item, i)}>契約</button>
+            </div>
+          </li>
+        )
+      } else {
+        return (
+          <li className={cls + ' disabled'} key={i}>
+            <div className="key_dist">
+              <span>家の場所：</span>
+              <span>{dist}</span>
+            </div>
+            <div className="key_require">
+              <span>必要：</span>
+              <span>{item.req[0]}</span>
+              <span>/ターン</span>
+            </div>
+            <div className="key_recover">
+              <span>回復：</span>
+              <span>{item.res[0]}</span>
+              <span>{item.res[1]}</span>
+              <span>{item.res[2]}</span>
+            </div>
+            <div className="box_btn">
+              <button>信用が足りません</button>
+            </div>
           </li>
         )
       }
     });
     let myhomeList = this.props.myhomelist.map((item, i) => {
       let cls = 'city' + item.city;
+      let dist;
+      if (item.city === 1) { dist = 'A';
+      } else if(item.city === 2){ dist = 'B';
+      } else if(item.city === 3){ dist = 'C';
+      } else if(item.city === 4){ dist = 'D';
+      } else if(item.city === 5){ dist = 'E';
+      } else if(item.city === 6){ dist = 'F'; }
       return (
         <li className={cls} key={i} onClick={e => this.saleHomeHandleClick(e, item, i)}>
-          <span data-val={item.req[0]}>毎ターン</span>
-          <span data-val={item.res[0]}>体力回復</span>
-          <span data-val={item.res[1]}>知力回復</span>
-          <span data-val={item.res[2]}>電力回復</span>
+          <div className="key_dist">
+            <span>家の場所：</span>
+            <span>{dist}</span>
+          </div>
+          <div className="key_require">
+            <span>必要：</span>
+            <span>{item.req[0]}</span>
+          </div>
+          <div className="key_recover">
+            <span>回復：</span>
+            <span>{item.res[0]}</span>
+            <span>{item.res[1]}</span>
+            <span>{item.res[2]}</span>
+          </div>
+          <div className="box_btn">
+            <button onClick={e => this.rentHomeHandleClick(e, item, i)}>解約</button>
+          </div>
         </li>
       )
     });
     let carList = this.props.carlist.map((item, i) => {
       let cls = 'city' + item.to;
       let dist;
-      if (item.to === 1) {
-        dist = 'A';
-      } else if(item.to === 2){
-        dist = 'B';
-      } else if(item.to === 3){
-        dist = 'C';
-      } else if(item.to === 4){
-        dist = 'D';
-      } else if(item.to === 5){
-        dist = 'E';
-      } else if(item.to === 6){
-        dist = 'F';
+      if (item.to === 1) { dist = 'A';
+      } else if(item.to === 2){ dist = 'B';
+      } else if(item.to === 3){ dist = 'C';
+      } else if(item.to === 4){ dist = 'D';
+      } else if(item.to === 5){ dist = 'E';
+      } else if(item.to === 6){ dist = 'F'; }
+      if (item.req[1] <= this.props.player.status.trs) {
+        return (
+          <li className={cls} key={i}>
+            <div>
+              <span>行き先：</span>
+              <span>{dist}</span>
+            </div>
+            <div className="key_require">
+              <span>必要：</span>
+              <span>{item.req[0]}</span>
+            </div>
+            <div className="box_btn">
+              <button onClick={e => this.rideCarHandleClick(e, item, i)}>乗車</button>
+            </div>
+          </li>
+        )
+      } else {
+        return (
+          <li className={cls + ' disabled'} key={i}>
+            <div>
+              <span>行き先：</span>
+              <span>{dist}</span>
+            </div>
+            <div className="key_require">
+              <span>必要：</span>
+              <span>{item.req[0]}</span>
+            </div>
+            <div className="box_btn">
+              <button>信用が足りません</button>
+            </div>
+          </li>
+        )
       }
-      return (
-        <li className={cls} key={i} onClick={e => this.rideCarHandleClick(e, item, i)}>
-          <span data-val={dist}>行き先</span>
-          <span data-val={item.req}>必要電力</span>
-        </li>
-      )
     });
     let offerPlayerList = this.props.plist.map((item, i) => {
       if (item.p.id !== this.props.player.id) {
@@ -1026,6 +1086,15 @@ class Index extends Component {
     })
     let strcls = {width: ((this.props.player.status.str / this.props.player.max.str ) * 60) + "px"};
     let intcls = {width: ((this.props.player.status.int / this.props.player.max.int ) * 60) + "px"};
+    let MKtrust = ()=>{
+      if (it.props.MKTrust === 0) {
+        return '';
+      } else if(it.props.MKTrust === 1){
+        return '';
+      } else if(it.props.MKTrust === -1){
+        return '';
+      }
+    };
     return (
       <div className="app">
         <header>
@@ -1154,7 +1223,7 @@ class Index extends Component {
             isOpen={this.state.carModalIsOpen} style={customStyles} contentLabel="Car"
           >
             <div className='carModal'>
-              <h1>シェアライド</h1>
+              <h1>他の地区に行く</h1>
               <p>現在他の人が行こうとしている街</p>
               <ul>{carList}</ul>
               <button onClick={this.closeCarModal.bind(this)}>閉じる</button>
@@ -1180,18 +1249,8 @@ class Index extends Component {
 
 export default Index
 
-// TODO: 自分の借りている家を貸し出す処理、借りている状態も保持する？ -> 難しいので後で
-// TODO: カーシェアの処理
+// TODO: レート100%で失敗する問題・・・ -> 解決
+// TODO: 移動権が見えない問題 -> UIのアップデート
 
-// TODO: 再ログイン・別アカウントへのログイン
-
-// TODO: X8を読んだときの処理。 => Jobカードの処理に変更
-
-// TODO: シェアライドの見られる量が信用度によって変化する
-// TODO: 家ボタンのUI・家の借りれる量も信用度によって変化する、借りられるレンジが変わる（H/M/L)
-// TODO: トレードのバグ修正
-// TODO: 細かな見えやすさの修正
-// TODO: 信用度の詳細メッセージ
-
-// TODO: 納期の問題
-// TODO: 読み込むJobが違う問題
+// TODO: オファーの期限切れ処理を改善する
+// TODO: 信用度動作ランプ処理

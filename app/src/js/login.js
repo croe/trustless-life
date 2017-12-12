@@ -34,6 +34,11 @@ class Login extends Component {
           <div className="form_login">
             <h1>TRUSTLESS LIFE</h1>
             <p>
+              <span>Room Number</span>
+              <input ref="" type="text" value="12345"/>
+            </p>
+            <p>
+              <span>User Name</span>
               <input ref="playerName" type="text"/>
             </p>
             <p>

@@ -3,7 +3,8 @@
 const http = require('http')
   , express = require('express')
   , app = express()
-  , NeDB = require('nedb');
+  , NeDB = require('nedb')
+  , mongoose = require('mongoose');
 
 // サーバー始動
 let server = http.createServer(app);
@@ -25,6 +26,33 @@ db.users.loadDatabase();
 db.logs.loadDatabase();
 db.offers.loadDatabase();
 db.trades.loadDatabase();
+
+// Mongoose
+// let Schema = mongoose.Schema;
+// // Market asset
+// let MAssetSchema = new Schema({
+//   player: Number,
+//   asset: Number,
+//   amount: Number,
+//   value: Number,
+//   isSoldout: Boolean,
+//   isCancel: Boolean,
+//   date: Date
+// })
+// mongoose.model('MAsset', MAssetSchema);
+//
+// let MAsset = mongoose.model('MAsset');
+// // Player
+// let UserSchema = new Schema({
+//   player: Number,
+//   balance: Number,
+//   assetsBalance: []
+// })
+// mongoose.model('User', UserSchema);
+// mongoose.connect('mongodb://localhost/user');
+// let User = mongoose.model('User');
+
+
 // Socket.io
 let io = require('socket.io')(server);
 
