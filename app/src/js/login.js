@@ -21,7 +21,7 @@ class Login extends Component {
     if (store.get('player') !== undefined){
       return false;
     }
-    let name = findDOMNode(it.refs.playerName).value
+    let name = findDOMNode(it.refs.playerName).value;
     it.props._it.initPlayerData(name);
     console.log(name);
   }
@@ -33,10 +33,10 @@ class Login extends Component {
         <main className="container">
           <div className="form_login">
             <h1>TRUSTLESS LIFE</h1>
-            <p>
-              <span>Room Number</span>
-              <input ref="" type="text" value="12345"/>
-            </p>
+            {/*<p>*/}
+              {/*<span>Room Number</span>*/}
+              {/*<input ref="" type="text" value="12345"/>*/}
+            {/*</p>*/}
             <p>
               <span>User Name</span>
               <input ref="playerName" type="text"/>

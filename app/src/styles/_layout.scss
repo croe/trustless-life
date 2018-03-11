@@ -48,6 +48,9 @@
           transform: translateY(-50%);
           right: 10px;
         }
+        &.s { &:before {  background: #7c7741;  } }
+        &.u { &:before {  background: #38af41;  } }
+        &.d { &:before {  background: #b33536;  } }
         &:after {
           content: '';
           position: absolute;
@@ -92,8 +95,8 @@
               }
             }
             &.s {
+              background: #7c7741;
               &:before {
-                background: #7c7741;
                 background: url('/images/stay.png') no-repeat;
                 background-size: contain;
                 width: 22px;

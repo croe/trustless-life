@@ -25,15 +25,15 @@ class App extends Component {
         "city": 0,
         "slam": false,
         "status": {
-          "str": 0,
-          "int": 0,
+          "str": 2,
+          "int": 2,
           "mov": 0,
           "trs": 100,
-          "val": 20
+          "val": 10
         },
         "max": {
-          "str": 5,
-          "int": 5
+          "str": 2,
+          "int": 2
         }
       },
       plist:[],
@@ -57,8 +57,8 @@ class App extends Component {
     let it = this;
 
     // let _io = io('http://192.168.1.185:3030/');
-    let _io = io('http://localhost:3030/');
-    // let _io = io(); // for Production
+    // let _io = io('http://localhost:3030/');
+    let _io = io(); // for Production
 
     _io.on('connect', () => {
       it.setState({
@@ -109,7 +109,13 @@ class App extends Component {
       _io.on('catch_trust_transaction', (msg) =>{
         console.log(msg)
         // 信用に関する登録が行われた時の処理
-        it.setState({ markerTrust: msg.dir });
+        if (msg.dir === 0) {
+          it.setState({ markerTrust: 's' });
+        } else if (msg.dir === -1) {
+          it.setState({ markerTrust: 'd' });
+        } else if (msg.dir === 1) {
+          it.setState({ markerTrust: 'u' });
+        }
       })
 
     })
@@ -277,7 +283,7 @@ class App extends Component {
           allowMove: this.state.allowMove,
           rideFlg: this.state.rideFlg,
           IO: this.state.IO,
-          MKTrust: this.state.markerTrust
+          markerTrust: this.state.markerTrust
         })}
       </div>
     )

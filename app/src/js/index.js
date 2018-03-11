@@ -27,6 +27,7 @@ class Index extends Component {
       tradeModalIsOpen: false,
       homeModalIsOpen: false,
       salehomeModalIsOpen: false,
+      selectPlayerModalIsOpen: false,
       scanFlg: true,
       nowSelectedItem: {}
     }
@@ -90,30 +91,6 @@ class Index extends Component {
         it.props._it.setState({lastPoscity: json.c});
         store.set('poscity', json.c);
         /**
-         * 家での回復
-         */
-        it.props.myhomelist.map((item, i) => {
-          it.props.player.status.val -= item.req[0];
-          it.props.player.status.mov += item.res[2];
-          if (item.city === it.props.lastPoscity) {
-            if (it.props.player.status.str + item.res[0] <= it.props.player.max.str) {
-              it.props.player.status.str += item.res[0];
-            } else {
-              it.props.player.status.str = it.props.player.max.str;
-            }
-            if (it.props.player.status.int + item.res[1] <= it.props.player.max.int) {
-              it.props.player.status.int += item.res[1];
-            } else {
-              it.props.player.status.int = it.props.player.max.int;
-            }
-          }
-        });
-        if (it.props.player.status.val < 0) {
-          it.props.player.status.trs -= 5;
-          let tx = {dir: -1, msg: '借金があるため信用度が減少しました'};
-          it.props._it.trustTransaction(tx);
-        }
-        /**
          * シェアライドのリストを更新
          */
         it.makeListCars();
@@ -127,11 +104,11 @@ class Index extends Component {
         // 自分のミッション
         it.props.mlist.map((item, i) => {
           item.limit -= 1;
-          if (item.limit < 0) {
+          if (item.limit < 1) {
             let pulled = _.pullAt(it.props.mlist, [i]);
             it.props._it.setState({mlist: it.props.mlist});
             store.set('mission', it.props.mlist);
-            it.props.player.status.trs -= 7;
+            it.props.player.status.trs -= 10;
             let tx = {dir: -1, msg: '仕事の期限が過ぎたため信用度が減少しました。'};
             it.props._it.trustTransaction(tx);
             it.props._it.setPlayerStatus();
@@ -142,10 +119,10 @@ class Index extends Component {
           if (item.c.of_f === it.props.player.id) {
             let _item = item.c;
             _item.limit -= 1;
-            if (_item.limit < 0) {
+            if (_item.limit < 1) {
               // TODO: 両方とも信用を少し失うようにする
               // TODO: マイナスになるとエラー
-              it.props.player.status.trs -= 7;
+              it.props.player.status.trs -= 10;
               let tx = {dir: -1, msg: '仕事の期限が過ぎたため信用度が減少しました。'};
               it.props._it.trustTransaction(tx);
               it.props.setPlayerStatus();
@@ -160,7 +137,7 @@ class Index extends Component {
          * 体力の最大値が①上がる
          */
         if (json.s === 1) {
-          it.props.player.max.str += 1;
+          it.props.player.max.str += (json.p - 1);
           let text = '少し体力がつきました';
           swal({title: text, icon: "success"});
           it.props._it.setPlayerStatus();
@@ -169,7 +146,7 @@ class Index extends Component {
          * 知力の最大値が①上がる
          */
         if (json.s === 2) {
-          it.props.player.max.int += 1;
+          it.props.player.max.int += (json.p - 1);
           let text = '少しなにか知識を得たようです';
           swal({title: text, icon: "success"});
           it.props._it.setPlayerStatus();
@@ -179,7 +156,7 @@ class Index extends Component {
          */
         if (json.s === 3) {
           let par = Math.floor(Math.random() * 100);
-          if (par < 50) {
+          if (par < 25 * (json.p - 1)) {
             let arr = store.get('mission') ? store.get('mission') : [];
             let sel2, selcp2;
             sel2 = Math.floor(Math.random() * db_event[0].length);
@@ -198,14 +175,21 @@ class Index extends Component {
               store.set('mission', arr);
               it.props._it.setState({mlist: arr});
             } else if (selcp2.id === 3) {
-              swal({title: '美味しいご飯を食べた'});
+              swal({title: '美味しいご飯を食べたので体力回復！'});
               it.props.player.status.str += 2;
               it.props._it.setPlayerStatus();
             } else if (selcp2.id === 4) {
-              swal({title: 'アートをのぞく時、アートもまたこちらをのぞいているのだ'});
+              swal({title: 'いい本に出会った、知力が増えた'});
               it.props.player.max.int += 2;
               it.props._it.setPlayerStatus();
-
+            } else if (selcp2.id === 5) {
+              swal({title: '筋トレの効果が出てきたみたい'});
+              it.props.player.max.str += 2;
+              it.props._it.setPlayerStatus();
+            } else if (selcp2.id === 6) {
+              swal({title: '猫動画でリラックス'});
+              it.props.player.status.int += 2;
+              it.props._it.setPlayerStatus();
             }
             it.closeMapModal();
             it.closeCtrlModal();
@@ -296,6 +280,37 @@ class Index extends Component {
         /**
          * 移動権の消失
          **/
+        it.props._it.setState({allowMove: null});
+        it.props._it.setState({rideFlg: false});
+        store.set('arwmove', it.props.allowMove);
+        store.set('rideFlg', it.props.rideFlg);
+
+        /**
+         * 家での回復
+         */
+        it.props.myhomelist.map((item, i) => {
+          it.props.player.status.val -= item.req[0];
+          it.props.player.status.mov += item.res[2];
+          if (item.city === it.props.lastPoscity) {
+            if (it.props.player.status.str + item.res[0] <= it.props.player.max.str) {
+              it.props.player.status.str += item.res[0];
+            } else {
+              it.props.player.status.str = it.props.player.max.str;
+            }
+            if (it.props.player.status.int + item.res[1] <= it.props.player.max.int) {
+              it.props.player.status.int += item.res[1];
+            } else {
+              it.props.player.status.int = it.props.player.max.int;
+            }
+            it.props._it.setPlayerStatus();
+          }
+        });
+        if (it.props.player.status.val < 0) {
+          it.props.player.status.trs -= 5;
+          let tx = {dir: -1, msg: '借金があるため信用度が減少しました'};
+          it.props._it.trustTransaction(tx);
+          it.props._it.setPlayerStatus();
+        }
 
       }
     }
@@ -351,6 +366,7 @@ class Index extends Component {
         // 自分が発信元の場合
         if (item.of_f === it.props.player.id) {
           // of_tがnullの場合のみ完了できる
+          // TODO: 相手が失敗した場合はどうなるの？
           if (item.of_t === null) {
             if (100 - item.rate < Math.floor(Math.random() * 100)) {
               // 成功ならコスト払って報酬と信用を獲る
@@ -495,23 +511,27 @@ class Index extends Component {
     }).then((agree) => {
       if (agree) {
         // homeListから削除して、自分のリストに追加する
-        let pulled = _.pullAt(it.props.homelist, [i]);
-        it.props._it.setState({homelist: it.props.homelist});
-        store.set('homes', it.props.homelist);
-        let arr = it.props.myhomelist;
-        arr.push(item);
-        it.props._it.setState({myhomelist: arr});
-        store.set('myhome', arr);
-        // 少し信用が上がる
-        it.props.player.status.trs += 5 + Math.floor(Math.random() * 5);
-        let tx = {dir: 1, msg: '家を契約したため信用度が上昇しました'};
-        it.props._it.trustTransaction(tx);
-        it.props._it.setPlayerStatus();
-        swal({title: '契約完了', icon: "success"});
+        if (it.props.myhomelist.length  < 3){
+          let pulled = _.pullAt(it.props.homelist, [i]);
+          it.props._it.setState({homelist: it.props.homelist});
+          store.set('homes', it.props.homelist);
+          let arr = it.props.myhomelist;
+          arr.push(item);
+          it.props._it.setState({myhomelist: arr});
+          store.set('myhome', arr);
+          // 少し信用が上がる
+          it.props.player.status.trs += 5 + Math.floor(Math.random() * 5);
+          let tx = {dir: 1, msg: '家を契約したため信用度が上昇しました'};
+          it.props._it.trustTransaction(tx);
+          it.props._it.setPlayerStatus();
+          swal({title: '契約完了しました', icon: "success"});
+        } else {
+          swal({title: '家はこれ以上借りられません', icon: "error"});
+        }
         it.closeHomeModal();
         it.closeCtrlModal();
       } else {
-        swal({title: 'Cancel', icon: 'error'});
+        swal({title: 'キャンセルしました', icon: 'error'});
       }
     })
   }
@@ -530,7 +550,7 @@ class Index extends Component {
         let pulled = _.pullAt(it.props.myhomelist, [i]);
         it.props._it.setState({myhomelist: it.props.myhomelist});
         store.set('myhome', it.props.myhomelist);
-        swal({title: '契約解除', icon: "success"});
+        swal({title: '契約解除しました', icon: "success"});
         // 少し信用が下がる
         it.props.player.status.trs -= 7 + Math.floor(Math.random() * 7);
         let tx = {dir: -1, msg: '家を解約したため信用度が減少しました'};
@@ -824,7 +844,7 @@ class Index extends Component {
               <span>{item.rate}</span>
             </div>
           </div>
-          <p className="limit">期限：残り<span>{item.limit}</span>ターン</p>
+          <p className="limit">期限：残り<span>{item.limit - 1}</span>ターン</p>
           <div className="box_btn">
             <button onClick={e => this.offerMissionHandleClick(e, item, i)}>オファー</button>
             <button onClick={e => this.doMissionHandleClick(e, item, i)}>遂行</button>
@@ -858,7 +878,7 @@ class Index extends Component {
                   <span>{rate}</span>
                 </div>
               </div>
-              <p className="limit">期限：残り<span>{item.limit}</span>ターン</p>
+              <p className="limit">期限：残り<span>{item.limit - 1}</span>ターン</p>
               <div className="box_btn">
                 <button onClick={e => this.doOfferHandleClick(e, _item, i)}>仕事する</button>
               </div>
@@ -882,7 +902,7 @@ class Index extends Component {
                   <span>{rate}</span>
                 </div>
               </div>
-              <p className="limit">期限：残り<span>{item.limit}</span>ターン</p>
+              <p className="limit">期限：残り<span>{item.limit - 1}</span>ターン</p>
               <div className="box_btn">
                 <button onClick={e => this.rejectOfferHandleClick(e, _item, i)}>拒否する</button>
                 <button onClick={e => this.doOfferHandleClick(e, _item, i)}>仕事する</button>
@@ -1086,15 +1106,6 @@ class Index extends Component {
     })
     let strcls = {width: ((this.props.player.status.str / this.props.player.max.str ) * 60) + "px"};
     let intcls = {width: ((this.props.player.status.int / this.props.player.max.int ) * 60) + "px"};
-    let MKtrust = ()=>{
-      if (it.props.MKTrust === 0) {
-        return '';
-      } else if(it.props.MKTrust === 1){
-        return '';
-      } else if(it.props.MKTrust === -1){
-        return '';
-      }
-    };
     return (
       <div className="app">
         <header>
@@ -1122,7 +1133,7 @@ class Index extends Component {
         </header>
         <main className="container">
           <div className="box left" style={navHeight}>
-            <h2>信用度ログ</h2>
+            <h2 className={this.props.markerTrust}>信用度ログ</h2>
             <PerfectScrollbar>
               <ul className="trust_list">
                 {trustList}
@@ -1173,7 +1184,7 @@ class Index extends Component {
           >
             <button onClick={this.closeCtrlModal.bind(this)}>閉じる</button>
             <button className="dangerous" onClick={this.resetDataHandleClick.bind(this)}>データリセット</button>
-            <button className="dangerous" onClick={this.changePlayerHandleClick.bind(this)}>別アカウントに変更</button>
+            <button className="dangerous" onClick={this.changePlayerHandleClick.bind(this)}>プレイヤーを登録する</button>
           </Modal>
           <Modal
             isOpen={this.state.mapModalIsOpen}
@@ -1241,6 +1252,11 @@ class Index extends Component {
               <button onClick={this.closeTradeModal.bind(this)}>閉じる</button>
             </div>
           </Modal>
+          <Modal isOpen={this.state.selectPlayerModalIsOpen} style={customStyles} contentLabel="SelectPlayer">
+            <div className='tradeModal'>
+              <h1>プレイヤー選択</h1>
+            </div>
+          </Modal>
         </div>
       </div>
     );
@@ -1251,6 +1267,9 @@ export default Index
 
 // TODO: レート100%で失敗する問題・・・ -> 解決
 // TODO: 移動権が見えない問題 -> UIのアップデート
+// TODO: 移動権は1ターンで消える
 
 // TODO: オファーの期限切れ処理を改善する
 // TODO: 信用度動作ランプ処理
+
+// TODO: 家の最大借りられる数　三軒に固定
