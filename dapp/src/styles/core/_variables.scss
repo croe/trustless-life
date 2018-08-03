@@ -1,0 +1,44 @@
+@import "./font";
+
+// Variables
+//
+// 各値を定義
+//
+// Styleguide variables
+
+//=======================//
+// COLORS
+//=======================//
+
+// Base
+
+$color-base-black: #040404;
+$color-base-white: #FEFEFE;
+$color-base-gray: #D3D5DC;
+
+// Texts
+$text-white: #ffffff;
+
+// Notifications
+$notification-primary: #ff554e;
+
+// Button
+// Theme normal
+$btn-primary: #00bce4;
+$btn-secondary: #ff406d;
+
+
+//=======================//
+// BREAKPOINTS
+//=======================//
+
+$breakpoint-pc: 1280px;
+$breakpoint-tb:  960px;
+$breakpoint-sp:  480px;
+
+
+//=======================//
+// FONTS
+//=======================//
+
+$font-mincho: Georgia,游明朝,"Yu Mincho",YuMincho,"Hiragino Mincho ProN",HGS明朝E,メイリオ,Meiryo,serif;

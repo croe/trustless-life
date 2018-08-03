@@ -1,0 +1,78 @@
+@import url(~normalize.css/normalize.css);
+@import url("https://use.typekit.net/wwf3nzi.css");
+@import url("https://use.typekit.net/wwf3nzi.css");
+body {
+  font-family: "sofia-pro",-apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Yu Gothic", YuGothic, sans-serif; }
+
+body {
+  font-family: "sofia-pro",-apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Yu Gothic", YuGothic, sans-serif; }
+
+.hidetext {
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden; }
+
+html {
+  box-sizing: border-box; }
+
+*, *:before, *:after {
+  box-sizing: inherit; }
+
+* {
+  -webkit-overflow-scrolling: touch; }
+
+html,
+body {
+  position: relative;
+  display: block;
+  height: 100%;
+  width: 100%;
+  -webkit-font-smoothing: antialiased;
+  z-index: 0;
+  scroll-behavior: smooth;
+  background-color: #ffffff; }
+  html #root,
+  body #root {
+    height: 100%;
+    width: 100%; }
+    html #root .wrapper,
+    body #root .wrapper {
+      height: 100%;
+      width: 100%; }
+      html #root .wrapper main,
+      body #root .wrapper main {
+        height: 100%;
+        width: 100%; }
+
+main {
+  position: relative; }
+
+ul, li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0; }
+
+img {
+  display: block;
+  width: 100%; }
+
+button {
+  border: none;
+  background: none;
+  padding: 0; }
+  button:focus {
+    outline: 0; }
+
+figure {
+  margin: 0; }
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0; }
+
+.animated-page-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
