@@ -6,6 +6,7 @@ import persistState from 'redux-localstorage'
 import { createStore, combineReducers, applyMiddleware, compose} from 'redux';
 import TransitionGroup from "react-transition-group/TransitionGroup"
 import AnimatedSwitch from "./components/util/animated_switch"
+import Swal from 'sweetalert2'
 import {
   ConnectedRouter,
   routerReducer,
@@ -19,6 +20,9 @@ import statusReducer from './redux/modules/status'
 import readerReducer from './redux/modules/reader'
 
 import * as readerModule from './redux/modules/reader'
+import * as playerModule from './redux/modules/player'
+
+import db_works from "./const/db_mission"
 
 import ReaderContainer from "./components/atoms/Reader"
 import HeaderContainer from "./containers/organisms/HeaderContainer"
@@ -34,16 +38,16 @@ import Market from "./containers/pages/Market"
 import Chart from "./containers/pages/Chart"
 import Success from "./containers/pages/Success"
 import Move from "./containers/pages/Move"
+import House from "./containers/pages/House"
 import Missed from "./containers/pages/404"
 import styled from 'styled-components'
 
 const Header = styled(HeaderContainer)``;
 const Modal = styled(ModalContainer)``;
+
 const history = createBrowserHistory();
 
-const enhancer = compose(
-  persistState(/*paths, config*/)
-)
+const enhancer = compose(persistState(/*paths, config*/))
 
 const store = createStore(
   combineReducers({
@@ -79,7 +83,19 @@ class RootContainer extends Component {
                         <QRReader
                           delay={300}
                           onError={(err) => {console.log(err)}}
-                          onScan={(data) => {console.log(data)}}
+                          onScan={
+                            data => {
+                              console.log(this.props);
+                              let json = JSON.parse(data);
+                              // ほんとはここで別Actionを発行するとよい
+                              // onScanから、読み込んだjson.xで振り分けて発行
+                              if (json && this.props.player.turn_action > 0) {
+                                if (json.x === 8) { determineAddWork(json, this.props) }
+                              }
+                              // 読み込み完了処理。
+
+                            }
+                          }
                         />
                       </QRContainer>
                     </div>
@@ -138,6 +154,12 @@ class RootContainer extends Component {
                          <Move {...props} />
                        )}
                 />
+                <Route exact
+                       path="/house"
+                       render={props => (
+                         <House {...props} />
+                       )}
+                />
                 <Route component={Missed} />
               </AnimatedSwitch>
             </TransitionGroup>
@@ -161,9 +183,24 @@ const QRContainer = styled.div`
   padding: 20px 0 0;
 `;
 
+const determineAddWork = (data, props) => {
+  // FIXME: これはReducerとかで対応した方が再利用性高い。
+  let work = db_works[data.c - 1][Math.abs(data.d - 3)];
+  // props.playerDecreaseAction();
+  if (props.status.credit.value > work.req[2]) {
+    Swal('Get Job!', 'You got a now work', 'success')
+    props.readerModalClose();
+    props.playerAddWork(work);
+  } else {
+    Swal('Oops...', 'Something went wrong!', 'error')
+    props.readerModalClose();
+    return false;
+  }
+}
 
 const mapStateToProps = state => {
   return {
+    player: state.player,
     status: state.status,
     reader: state.reader
   }
@@ -172,7 +209,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     readerModalOpen: () => dispatch(readerModule.isOpen()),
-    readerModalClose: () => dispatch(readerModule.onClose())
+    readerModalClose: () => dispatch(readerModule.onClose()),
+    playerAddWork: data => dispatch(playerModule.addWork(data)),
+    playerDecreaseAction: () => dispatch(playerModule.decreaseAction())
   }
 }
 
